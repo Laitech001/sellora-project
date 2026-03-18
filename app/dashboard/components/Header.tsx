@@ -1,6 +1,8 @@
-import { Bell, Menu, User } from 'lucide-react'
+import { Bell, User,} from 'lucide-react'
+import MenuButton from './MobileSidebar'
 
 export default function Header() {
+
   return (
     <div className='w-full p-4 border-b border-gray-400'>
       {/* Desktop Header */}
@@ -23,12 +25,10 @@ export default function Header() {
       </div>
 
       {/* Mobile Header */}
-      <div className='md:hidden flex justify-between items-center'>
-        <button>
-          <Menu size={22}/>
-        </button>
+      <div className='md:hidden flex justify-between items-center overflow-x-hidden'>
+        <MenuButton />
 
-        <h2 className='text-xl font-semibold'>Welcome Developer!</h2>
+        <h2 className='text-xl font-semibold'>Welcome, Developer!</h2>
 
         <div className="flex items-center gap-4">
           <button>
