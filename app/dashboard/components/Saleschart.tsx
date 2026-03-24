@@ -11,7 +11,7 @@ const data = [
 
 export default function Saleschart() {
   return (
-    <div className="w-full h-80 bg-white p-4 rounded-xl">
+    <div className="w-full h-80 p-4 rounded-xl mb-6">
       <h2 
         className="text-lg font-semibold mb-4"
       >

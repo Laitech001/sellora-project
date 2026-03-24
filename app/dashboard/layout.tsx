@@ -9,7 +9,9 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen text-gray-900 bg-white">
 
-      <Sidebar />
+      <section className="h-full sticky top-0 left-0">
+        <Sidebar />
+      </section>
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-50">

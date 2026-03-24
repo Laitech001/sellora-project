@@ -21,11 +21,11 @@ export default function Sidebar() {
 
   const links: NavLink[] = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/products', label: 'Products', icon: Package },
-    { href: '/orders', label: 'Orders', icon: ShoppingCart },
-    { href: '/customers', label: 'Customers', icon: Users},
-    { href: '/analytics', label: 'Analytics', icon: BarChart3},
-    { href: '/settings', label: 'Settings', icon: Settings}
+    { href: '/dashboard/products', label: 'Products', icon: Package },
+    { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
+    { href: '/dashboard/customers', label: 'Customers', icon: Users},
+    { href: '/dashboard/analytics', label: 'Analytics', icon: BarChart3},
+    { href: '/dashboard/settings', label: 'Settings', icon: Settings}
   ]
   return (
     <>

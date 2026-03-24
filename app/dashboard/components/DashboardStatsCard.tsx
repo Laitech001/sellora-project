@@ -5,7 +5,7 @@ type DashboardCardProps = {
   color: string
 }
 
-export default function DashboardCard({ icon: Icon, title, value, color}: DashboardCardProps) {
+export default function DashboardStatsCard({ icon: Icon, title, value, color}: DashboardCardProps) {
   return (
     <div className={`rounded-lg p-5 text-white shadow ${color}`}>
       <section className="flex gap-2">
