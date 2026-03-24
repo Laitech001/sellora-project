@@ -1,4 +1,4 @@
-import { supabase } from "../SupabaseConfig"
+import { supabase } from "../supabase"
 
 export async function getProducts() {
 
@@ -11,5 +11,7 @@ export async function getProducts() {
     return[];
   }
 
-  return data
+  console.log(data)
+
+  return data;
 }

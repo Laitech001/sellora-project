@@ -3,7 +3,7 @@ import ProductRow from "./ProductRow";
 import { getProducts } from "@/lib/data/Products";
 
 export default async function ProductTable() {
-  const Products = await  getProducts();
+  const products = await  getProducts();
 
   return (
     <Table>
@@ -17,7 +17,7 @@ export default async function ProductTable() {
         </tr>
       </thead>
       <tbody>
-        {Products.map((product) => (
+        {products && products.map((product) => (
           <ProductRow
             key={product.id}
             imagePath={product.image} 

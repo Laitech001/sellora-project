@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import EmptyState from '../components/products/EmptyState'
 import ProductTable from '../components/products/ProductTable'
+import { getProducts } from '@/lib/data/Products'
 
-export default function Products() {
+export default async function Products() {
+  const products = await getProducts()
+
   return (
     <>
       <section className='flex justify-between items-center p-4'>
@@ -16,7 +19,10 @@ export default function Products() {
         </Link>
       </section>
 
-      <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
+      {products && products.length > 0 ? (
+        <ProductTable /> 
+      ) : (
+        <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
         <EmptyState 
           title= 'No Product Added'
           description='Click on Add Product to add to first Product'
@@ -24,8 +30,9 @@ export default function Products() {
           actionLink='dashboard/products/new'
         />
       </section>
+      )
+      }
 
-      <ProductTable />
     
     </>
   )
