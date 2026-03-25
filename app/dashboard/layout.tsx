@@ -1,5 +1,4 @@
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./ui/Sidebar";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +14,6 @@ export default function DashboardLayout({
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-50">
-        <Header />
         {children}
       </main>
 

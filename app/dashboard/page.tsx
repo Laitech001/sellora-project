@@ -1,10 +1,11 @@
 import { getRecentOrders } from "@/lib/data/Orders";
-import DashboardStatsCard from "./components/DashboardStatsCard"
-import Saleschart from "./components/Saleschart"
+import DashboardStatsCard from "./ui/DashboardStatsCard"
+import Saleschart from "./ui/Saleschart"
 import { getstats } from "@/lib/data/Stats"
 import OrderCard from "./components/OrderCard";
 import OrderRow from "./components/OrderRow";
-import Table from "./components/Table";
+import Table from "./ui/Table";
+import Header from "./ui/Header";
 
 
 export default async function Dashboard() {
@@ -13,6 +14,8 @@ export default async function Dashboard() {
 
   return (
     <>
+      <Header />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-2">
         {stats.map((stat, index) => (
           <DashboardStatsCard 

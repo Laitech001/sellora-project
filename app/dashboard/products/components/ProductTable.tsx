@@ -1,4 +1,4 @@
-import Table from "../Table";
+import Table from "../../ui/Table";
 import ProductRow from "./ProductRow";
 import { getProducts } from "@/lib/data/Products";
 

@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import EmptyState from '../components/products/EmptyState'
-import ProductTable from '../components/products/ProductTable'
+import EmptyState from './components/EmptyState'
+import ProductTable from './components/ProductTable'
 import { getProducts } from '@/lib/data/Products'
+import ProductCard from './components/ProductCard'
 
 export default async function Products() {
   const products = await getProducts()
@@ -20,7 +21,28 @@ export default async function Products() {
       </section>
 
       {products && products.length > 0 ? (
-        <ProductTable /> 
+        <>
+          <div className='hidden md:block p-2'>
+            <ProductTable />
+          </div>
+          
+          <div className='md:hidden p-2'>
+            {products && products.map((product) => (
+              <ProductCard 
+                key={product.id}
+                imagePath={product.image} 
+                title={product.name}
+                price= {product.price}
+                status={product.status}
+                editLink={"product/link"}
+                editText={"Edit"}
+                deleteLink={"product/delete"}
+                deleteText={"Delete"}
+              />
+            ))}
+          </div>
+          
+        </>
       ) : (
         <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
         <EmptyState 
