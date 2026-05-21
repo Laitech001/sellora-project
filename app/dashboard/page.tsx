@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabaseServer"
-import { redirect } from "next/navigation"
 import { OnboardingHeader } from "@/components/dashboard/layout"
 import { StoreList } from '@/components/dashboard/others'
 import { Card, Button} from "@/ui"
@@ -14,7 +13,10 @@ export default async function Dashboard() {
       <OnboardingHeader />
 
       {user && (
-        <div>{user.email}</div>
+        <div>
+          <p>{user.email}</p>
+          <p>{user.id}</p>
+        </div>
       )}
 
       <div className=' bg-white p-2 border border-gray-200 rounded-md m-4 '>

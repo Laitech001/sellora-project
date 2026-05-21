@@ -1,11 +1,17 @@
 'use client';
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Modal, Button, Form, TextInput, TextArea, Label } from '@/ui'
 import EmptyState from '@/components/shared/EmptyState';
 
+interface Props {
+  userId: string;
+}
 export default function StoreList() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [storeData, setStoreData] = useState({
     storeName: '',
     slug: '',
@@ -61,9 +67,24 @@ export default function StoreList() {
     setLoading(true);
 
     try {
-      console.log(storeData);
-    } catch {
-      console.log('Failed to Create Store');
+      const response = await fetch('/api/stores/store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(storeData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error);
+        return;
+      }
+
+      router.push(`/dashboard/${result.store.slug}`);
+      router.refresh();
+
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
       setStoreData({
