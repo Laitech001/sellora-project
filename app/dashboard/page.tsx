@@ -8,18 +8,13 @@ export default async function Dashboard() {
   const supabase = await createClient();
 
   const { data: { user }, error } = await supabase.auth.getUser();
-
-  // If no user, redirect to login
-  if (!user || error) {
-    redirect("/signup");
-  }
   
   return (
     <div className="bg-gray-50 min-h-screen">
       <OnboardingHeader />
 
       {user && (
-        <div>user.email</div>
+        <div>{user.email}</div>
       )}
 
       <div className=' bg-white p-2 border border-gray-200 rounded-md m-4 '>

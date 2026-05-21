@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from "lucide-react";
 import { Form, TextInput, Label, Button } from '@/ui';
@@ -8,10 +8,10 @@ import { supabase } from "@/lib/supabase";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Authform() {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"signup" | "login">("signup");
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -101,6 +101,7 @@ export default function Authform() {
 
     try {
       if (!loginData.email || !loginData.password) {
+        setLoading(false);
         return alert('Please fill all the field')
       }
 
@@ -109,15 +110,20 @@ export default function Authform() {
         password: loginData.password
       })
 
+      console.log(data);
+
       if (loginError) {
         setError(loginError.message);
+        console.log(loginError.message);
         return;
       }
 
-      const { data: userData } = await supabase.auth.getUser();
-
-      if (userData.user) {
-        router.push("/dashboard");
+      if (data.user && data.session) {
+        console.log('about to redirect');
+        router.push('/dashboard');
+        router.refresh();
+      } else {
+        console.log('no user and session')
       }
 
     } catch (error) {
@@ -131,10 +137,9 @@ export default function Authform() {
     }
   }
 
-
   return (
     <div  className="min-h-screen flex justify-center items-center">
-      <div className="border border-gray-200 shadow-sm p-3 rounded-sm">
+      <div className="border bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-border font-semibold shadow-sm p-3 rounded-md">
         <div className="text-center mb-4">
           <h1 className="text-xl md:text-2xl font-semibold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">Sellora</h1>
         </div>
