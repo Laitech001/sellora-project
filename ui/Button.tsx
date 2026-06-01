@@ -2,7 +2,7 @@
 type ButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
-  varient?: 'primary' | 'secondary' | 'danger';
+  varient?: 'primary' | 'secondary' | 'danger' | 'gradient';
   size?: 'small' | 'medium' | 'large';
   type?: 'button' | 'submit' | 'reset';
   loading?: boolean;
@@ -16,6 +16,7 @@ export default function Button({ children, onClick, varient = 'primary', size = 
     primary: 'bg-blue-500 text-white hover:bg-blue-600 border border-blue-500',
     secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 border border-gray-300',
     danger: 'bg-red-500 text-white hover:bg-red-600 border border-red-500',
+    gradient: 'bg-linear-to-r from-primary-500 to-accent-500 text-white',
   }
 
   const sizeClasses  = {

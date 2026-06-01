@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 
 type Product = {
   id: string;
@@ -76,6 +75,8 @@ export const deleteProduct = async (id: string) => {
       method: 'DELETE'
     });
 
+    console.log(`Deleting product with id: ${id}`);
+    console.log('Delete response:', res);
     if (!res.ok) {
       console.error('Failed to delete product')
     }

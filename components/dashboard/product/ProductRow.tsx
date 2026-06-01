@@ -1,8 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Pencil, Trash } from 'lucide-react'
-import { Button } from '@/ui'
+import { Pencil } from 'lucide-react'
 import DeleteButton from './DeleteButton'
 
 type ProductRowProps = {

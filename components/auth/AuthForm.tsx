@@ -138,13 +138,14 @@ export default function Authform() {
   }
 
   return (
-    <div  className="min-h-screen flex justify-center items-center">
-      <div className="border bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-border font-semibold shadow-sm p-3 rounded-md">
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="max-w-xl lg:min-w-md bg-white border-gray-200 font-semibold shadow-sm p-3 rounded-md">
+
         <div className="text-center mb-4">
-          <h1 className="text-xl md:text-2xl font-semibold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">Sellora</h1>
+          <h1 className="text-xl md:text-2xl font-semibold bg-linear-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">Sellora</h1>
         </div>
 
-        <div className="relative flex justify-evenly items-center w-70 rounded-full bg-gray-200 p-1 mb-4">
+        <div className="relative flex justify-evenly items-center w-full rounded-full bg-gray-200 p-1 mb-4">
 
           {/* Sliding pill — sits behind buttons */}
           <div
@@ -179,13 +180,13 @@ export default function Authform() {
         {activeTab === "signup" && (
           <Form
             onSubmit={handleSignup} 
-            className='animate-slide-in duration-300'
+            className='animate-slide-in duration-300 border-none shadow-none'
           >
             
             <div className="mb-4">
               <h1 className="text-gray-800 text-lg md:text-xl">Welcome to Sellora</h1>
 
-              <p>Sign Up to set up your own store</p>
+              <p className="text-gray-700 text-md font-light">Sign Up to set up your own store</p>
             </div>
 
             <div className="flex flex-col justify-center">
@@ -196,6 +197,7 @@ export default function Authform() {
                 value={signupData.username}
                 onChange={(e) => handleChange(e, "signup")}
                 placeholder='Enter your username'
+                radius="medium"
                 required
               />
             </div>
@@ -209,6 +211,7 @@ export default function Authform() {
                 onChange={(e) => handleChange(e, "signup")}
                 placeholder='Enter your email'
                 type='email'
+                radius="medium"
                 required
               />
             </div>
@@ -222,6 +225,7 @@ export default function Authform() {
                 onChange={(e) => handleChange(e, "signup")}
                 placeholder='Enter your password'
                 type='password'
+                radius="medium"
                 required
               />
             </div>
@@ -233,8 +237,9 @@ export default function Authform() {
 
             <Button 
               type='submit' 
+              varient="gradient"
               disabled={loading}
-              className='w-full rounded-full mt-4'
+              className='w-full rounded-full mt-4 bg-primary-500'
             >
               {loading ? 'Signing Up...' : 'Sign Up'}
             </Button>
@@ -248,8 +253,8 @@ export default function Authform() {
             className='animate-slide-fade'
           >
             <div className="mb-4">
-              <h1 className="text-gray-800 text-lg md:text-xl">Welcome Back</h1>
-              <p>
+              <h1 className="text-gray-800 text-lg md:text-xl">Welcome Back!</h1>
+              <p className="text-gray-700 text-md font-light">
                 Login to your account to continue
               </p>
             </div>
@@ -263,6 +268,7 @@ export default function Authform() {
                 onChange={(e) => handleChange(e, "login")}
                 placeholder='Enter your email'
                 type='email'
+                radius="medium"
                 required
               />
             </div>
@@ -276,13 +282,16 @@ export default function Authform() {
                 onChange={(e) => handleChange(e, "login")}
                 placeholder='Enter your password'
                 type='password'
+                radius="medium"
+                required
               />
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <Button 
-              type='submit' 
+              type='submit'
+              varient="gradient" 
               disabled={loading}
               className='w-full rounded-full mt-4'
             >

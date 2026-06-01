@@ -1,5 +1,5 @@
 'use client'
-import { Table, Modal, Button } from "@/ui";
+import { Table, Modal, Button, Card } from "@/ui";
 import ProductRow from "./ProductRow";
 import { useState, useEffect } from 'react'
 import { deleteProduct } from "@/lib/data/Products";
@@ -74,18 +74,20 @@ export default function ProductTable({ products }: ProductProps) {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
           >
-            <p>Are you sure you want to delete this product!</p>
+            <Card className=" flex flex-col justify-center items-center p-6 gap-4 w-full max-w-md">
+              <p>Are you sure you want to delete this product!</p>
 
-            <section className="flex justify-center items-center gap-6">
-              <Button 
-                varient="danger"
-                onClick={() => handleDelete(selectedId!)}
-              >
-                Delete
-              </Button>
+              <section className="flex justify-center items-center gap-6">
+                <Button 
+                  varient="danger"
+                  onClick={() => handleDelete(selectedId!)}
+                >
+                  Delete
+                </Button>
 
-              <Button onClick={onClose} varient="secondary">Cancel</Button>
-            </section>
+                <Button onClick={onClose} varient="secondary">Cancel</Button>
+              </section>
+            </Card>
           </Modal>
         )
       } 
