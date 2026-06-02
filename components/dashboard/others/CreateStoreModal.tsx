@@ -1,34 +1,24 @@
-'use client';
+'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Modal, Button, Form, TextInput, TextArea, Label } from '@/ui'
-import EmptyState from '@/components/shared/EmptyState';
 
 interface Props {
-  userId: string;
+  isOpen: boolean;
+  onClose: () => void;
 }
-export default function StoreList() {
-  const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [storeData, setStoreData] = useState({
-    storeName: '',
-    slug: '',
-    phoneNumber: '',
-    businessType: '',
-    address: ''
-  });
 
-  // open modal function
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  }
-
-  // close modal function
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  }
+export default function CreateStoreModal({ isOpen, onClose }: Props) {
+const router = useRouter();
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(false);
+const [storeData, setStoreData] = useState({
+  storeName: '',
+  slug: '',
+  phoneNumber: '',
+  businessType: '',
+  address: ''
+});
 
   // handle store data for change
   const handleChange = (
@@ -97,20 +87,11 @@ export default function StoreList() {
     }
     
   }
+
   return (
     <>
-      <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
-        <EmptyState 
-          title= 'You have not created any store'
-          description='Click on Create Store to create your first store'
-        />
-        <Button onClick={handleModalOpen}>
-          Create Store
-        </Button>
-      </section>
-
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} onClose={handleModalClose}>
+      {isOpen && (
+        <Modal isOpen={isOpen} onClose={onClose}>
           <Form onSubmit={handleSubmit}>
             <h1 className='text-center'>Create Store</h1>
 
@@ -191,7 +172,10 @@ export default function StoreList() {
           </Form>
         </Modal>
       )}
-
     </>
   )
+
+
 }
+
+

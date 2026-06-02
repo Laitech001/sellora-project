@@ -1,14 +1,35 @@
 'use client';
-import { useState } from 'react';
+import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation';
+import { Button } from '@/ui'
+import { BrandLogoName } from '@/ui/Brand';
 
 
 export default function OnboardingHeader() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error(error);
+      alert('Unable to Log Out');
+      return;
+    }
+
+    router.push('/signup')
+  }
   return (
     <>
-      {/* Mobile Layout */}
-      <div className='bg-white w-full px-4 py-2 border-b border-gray-400'>
-        <h1 className='text-2xl font-bold'>Welcome to your Dashboard</h1>
+      <div className='flex justify-between items-center bg-dark text-white w-full px-4 py-2 border-b border-slate-500'>
+        <BrandLogoName />
+        
+        <Button
+          variant='gradient'
+          onClick={handleLogout}
+        >
+          Log Out
+        </Button>
       </div>
     
     </>

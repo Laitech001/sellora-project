@@ -79,13 +79,13 @@ export default function ProductTable({ products }: ProductProps) {
 
               <section className="flex justify-center items-center gap-6">
                 <Button 
-                  varient="danger"
+                  variant="danger"
                   onClick={() => handleDelete(selectedId!)}
                 >
                   Delete
                 </Button>
 
-                <Button onClick={onClose} varient="secondary">Cancel</Button>
+                <Button onClick={onClose} variant="secondary">Cancel</Button>
               </section>
             </Card>
           </Modal>

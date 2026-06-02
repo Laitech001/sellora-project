@@ -237,7 +237,7 @@ export default function Authform() {
 
             <Button 
               type='submit' 
-              varient="gradient"
+              variant="gradient"
               disabled={loading}
               className='w-full rounded-full mt-4 bg-primary-500'
             >
@@ -291,7 +291,7 @@ export default function Authform() {
 
             <Button 
               type='submit'
-              varient="gradient" 
+              variant="gradient" 
               disabled={loading}
               className='w-full rounded-full mt-4'
             >

@@ -63,10 +63,11 @@ export default async function Dashboard({ params }: ParamsPprops) {
 
   return (
     <>
-      <div className="fixed top-0 left-2 z-50 p-2 text-white text-sm
-  bg-red-500 hidden md:bg-blue-500 lg:bg-green-500 xl:bg-yellow-500">
-  breakpoint test
-</div>
+      <div 
+        className="fixed top-0 left-2 z-50 p-2 text-white text-sm bg-red-500 hidden md:bg-blue-500 lg:bg-green-500 xl:bg-yellow-500"
+      >
+        breakpoint test
+      </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-2">
         {

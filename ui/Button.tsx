@@ -2,7 +2,7 @@
 type ButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
-  varient?: 'primary' | 'secondary' | 'danger' | 'gradient';
+  variant?: 'primary' | 'secondary' | 'danger' | 'gradient';
   size?: 'small' | 'medium' | 'large';
   type?: 'button' | 'submit' | 'reset';
   loading?: boolean;
@@ -10,9 +10,9 @@ type ButtonProps = {
   className?: string;
 }
 
-export default function Button({ children, onClick, varient = 'primary', size = 'medium', type = 'button', loading = false, disabled = false, className }: ButtonProps) {
+export default function Button({ children, onClick, variant = 'primary', size = 'medium', type = 'button', loading = false, disabled = false, className }: ButtonProps) {
 
-  const varientClasses = {
+  const variantClasses = {
     primary: 'bg-blue-500 text-white hover:bg-blue-600 border border-blue-500',
     secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 border border-gray-300',
     danger: 'bg-red-500 text-white hover:bg-red-600 border border-red-500',
@@ -27,7 +27,7 @@ export default function Button({ children, onClick, varient = 'primary', size = 
 
   const isDisabled = disabled || loading;
 
-  const baseClasses = `${varientClasses[varient]} ${sizeClasses[size]} rounded cursor-pointer ${className || ''}`;
+  const baseClasses = `${variantClasses[variant]} ${sizeClasses[size]} rounded cursor-pointer ${className || ''}`;
 
   const disabledClasses = isDisabled
   ? "opacity-50 cursor-not-allowed"

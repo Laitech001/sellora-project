@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   Laptop,
 } from "lucide-react";
+import { BrandLogoName } from '@/ui/Brand';
 
 
 export default function SignUp() {
@@ -29,10 +30,7 @@ export default function SignUp() {
     <div className='min-h-screen bg-linear-to-r from-primary-500 to-accent-500 bg-fixed overflow-x-hidden'>
 
       <header className='p-2'>
-        <div className='flex gap-2 items-center'>
-          <h1 className='flex justify-center items-center h-8 w-8 bg-linear-to-r from-primary-500 to-accent-500 text-white text-xl font-semibold rounded-md'>S</h1>
-          <span className='text-xl text-white'>Sellora</span>
-        </div>
+        <BrandLogoName />
       </header>
       
       <section className='flex items-center justify-center lg:justify-evenly lg:gap-6 lg:items-center'>
