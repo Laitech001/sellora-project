@@ -1,5 +1,6 @@
 'use client';
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/ui'
 import { BrandLogoName } from '@/ui/Brand';
@@ -7,6 +8,7 @@ import { BrandLogoName } from '@/ui/Brand';
 
 export default function OnboardingHeader() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -17,6 +19,7 @@ export default function OnboardingHeader() {
       return;
     }
 
+    setIsLoading(true);
     router.push('/signup')
   }
   return (
@@ -27,8 +30,9 @@ export default function OnboardingHeader() {
         <Button
           variant='gradient'
           onClick={handleLogout}
+          disabled={isLoading}
         >
-          Log Out
+          {isLoading ? 'Logging out...' : 'Log Out'}
         </Button>
       </div>
     

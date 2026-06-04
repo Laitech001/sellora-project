@@ -45,9 +45,9 @@ export default function ProductTable({ products }: ProductProps) {
 
   return (
     <>
-      <Table className="bg-gray-50 border border-gray-200 rounded-lg shadow-md">
+      <Table className="border border-slate-500 rounded-lg shadow-md">
         <thead>
-          <tr className="text-left text-sm font-semibold text-gray-600 border-b border-gray-300 py-4">
+          <tr className="text-left text-sm font-semibold text-gray-200 border-b border-slate-500 py-4">
             <th className="py-3">Image</th>
             <th>Name</th>
             <th>Price</th>

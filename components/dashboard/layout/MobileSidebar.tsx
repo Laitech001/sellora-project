@@ -28,7 +28,6 @@ export default function MenuButton() {
     { href: `/dashboard/${storeSlug}`, label: 'Dashboard', icon: LayoutDashboard },
     { href: `/dashboard/${storeSlug}/products`, label: 'Products', icon: Package },
     { href: `/dashboard/${storeSlug}/orders`, label: 'Orders', icon: ShoppingCart },
-    { href: `/dashboard/${storeSlug}/customers`, label: 'Customers', icon: Users},
     { href: `/dashboard/${storeSlug}/analytics`, label: 'Analytics', icon: BarChart3},
     { href: `/dashboard/${storeSlug}/settings`, label: 'Settings', icon: Settings}
   ]
@@ -47,7 +46,7 @@ export default function MenuButton() {
           />
 
           <aside 
-            className={`fixed top-0 left-0 h-screen w-60 bg-gray-200 text-gray-900 p-6 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
+            className={`fixed top-0 left-0 h-screen w-60 bg-card text-gray-200 p-6 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
           }>
             <h1 className="text-xl md:text-3xl lg:text-4xl font-bold mb-6">Sellora</h1>
 
@@ -63,8 +62,8 @@ export default function MenuButton() {
                         href={link.href}
                         className={`flex flex-row items-center rounded-lg gap-4 p-2 cursor-pointer transition-colors ${
                           isActive
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                            ? 'bg-primary-200 text-primary-500'
+                            : 'text-gray-200 hover:bg-primary-200 hover:text-primary-500'
                         }`}
                       >
                         <Icon size={18} />

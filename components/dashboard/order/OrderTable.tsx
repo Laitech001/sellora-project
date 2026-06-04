@@ -46,9 +46,9 @@ export default function OrderTable({ orders }: orderProps) {
   }
 
   return (
-    <Table className='hidden lg:block bg-gray-50 border border-gray-200 rounded-lg'>
+    <Table className='hidden lg:block border border-slate-500 rounded-lg'>
       <thead>
-        <tr className="text-left text-sm font-semibold text-gray-600 border-b border-gray-300 py-4">
+        <tr className="text-left text-sm font-semibold text-gray-200 border-b border-slate-500 py-4">
           <th className='py-3'>Customer Name</th>
           <th>Customer Number</th>
           <th>Product</th>

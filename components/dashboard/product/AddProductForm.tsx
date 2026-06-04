@@ -127,7 +127,6 @@ export default function AddProductForm({storeSlug}: Props) {
             placeholder="Stock"
             value={formData.stock}
             onChange={handleChange}
-            className="bg-white"
           />
         </div>
 
@@ -142,7 +141,12 @@ export default function AddProductForm({storeSlug}: Props) {
           />
         </div>
         
-        <Button type="submit" disabled={loading} className="mt-4">
+        <Button
+          type="submit" 
+          disabled={loading} 
+          className="mt-4 w-full rounded-full"
+          variant="gradient"
+        >
           {loading ? 'Adding...' : 'Add Product'}
         </Button>
 

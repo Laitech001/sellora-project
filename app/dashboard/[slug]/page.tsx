@@ -82,20 +82,20 @@ export default async function Dashboard({ params }: ParamsPprops) {
         }
       </div>
 
-      <div className="m-2 bg-white border border-gray-200 shadow-md rounded-xl">
+      <div className="bg-card m-2 border border-slate-500 shadow-md rounded-xl">
         <Saleschart orders={orders}/>
       </div>
 
-      <div className="p-6 m-2 mt-4 bg-white border border-gray-200 shadow-md rounded-xl">
-
-        <Card className="flex justify-between items-center bg-gray-50 border border-gray-200 rounded-lg mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">
+      <div className="p-6 m-2 mt-4 bg-card border border-slate-500 shadow-md rounded-xl">
+        
+        <Card className="flex justify-between items-center bg-card border border-slate-500 rounded p-2 mb-4">
+          <h2 className="text-lg font-semibold text-gray-200">
             Recent Orders
           </h2>
 
           <Link
             href='/dashboard/orders'
-            className='py-2 px-3 bg-blue-500 text-white border border-blue-500 rounded-lg text-md hover:bg-white hover:text-blue-600 transition'
+            className='py-2 px-3 bg-linear-to-r from-primary-500 to-accent-500 text-white rounded-lg text-md transition'
           >
             View All
           </Link>

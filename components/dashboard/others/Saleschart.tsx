@@ -1,4 +1,5 @@
 "use client"
+import { Card } from "@/ui";
 import { LineChart, CartesianGrid, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 type Order = {
@@ -32,9 +33,9 @@ export default function Saleschart({ orders }: { orders: Order[] }) {
   };
 
   return (
-    <div className="w-auto h-auto p-4 rounded-xl mb-6">
+    <Card className='w-auto h-auto p-4 mb-6'>
       <h2 
-        className="text-lg font-semibold mb-4"
+        className="text-gray-200 text-lg font-semibold mb-4"
       >
         Sales Overview
       </h2>
@@ -51,6 +52,7 @@ export default function Saleschart({ orders }: { orders: Order[] }) {
           <Line type="monotone" dataKey="sales" stroke="#6366f1" strokeWidth={3} />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+
+    </Card>
   )
 }

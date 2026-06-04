@@ -180,6 +180,7 @@ export default function Authform() {
         {activeTab === "signup" && (
           <Form
             onSubmit={handleSignup} 
+            variant="light"
             className='animate-slide-in duration-300 border-none shadow-none'
           >
             
@@ -250,6 +251,7 @@ export default function Authform() {
         {activeTab === 'login' && (
           <Form
             onSubmit={handleLogin} 
+            variant="light"
             className='animate-slide-fade'
           >
             <div className="mb-4">

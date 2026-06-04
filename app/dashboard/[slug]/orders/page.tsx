@@ -16,13 +16,13 @@ export default async function OrderPage({ params }: ParamsProps) {
   console.log('Orders page orders:', orders);
 
   return (
-    <div className='bg-white border border-gray-200 rounded-md p-2 m-2'>
+    <div className='bg-card border border-slate-500 rounded-md p-2'>
 
-      <Card className='flex flex-col justify-left p-4 bg-gray-50 border border-gray-200 rounded-lg mb-2'>
-        <h1 className="text-2xl font-bold text-gray-800">
+      <Card className='flex flex-col justify-left p-4 bg-card border border-slate-500 rounded-lg mb-2'>
+        <h1 className="text-2xl font-bold text-gray-200">
           Orders
         </h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-200">
           Track and manage customer orders
         </p>
       </Card>

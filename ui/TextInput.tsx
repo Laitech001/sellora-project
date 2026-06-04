@@ -10,9 +10,15 @@ type TextInputProps = {
   size?: 'small' | 'medium' | 'large';
   radius?: 'base' | 'medium' | 'full'; 
   className?: string;
+  variant?: 'default' | 'light';
 }
 
-export default function TextInput({id, type, placeholder, name, value, accept, onChange, size = 'medium', radius = 'base', className }: TextInputProps) {
+export default function TextInput({id, type, placeholder, name, value, accept, onChange, size = 'medium', radius = 'base', className, variant = 'default' }: TextInputProps) {
+
+  const variantClasses = {
+    default: 'border border-slate-700 text-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+    light: 'bg-white text-gray-800 border border-gray-300'
+  }
 
   const sizeClasses  = {
     small: 'px-2 py-1 text-sm',
@@ -26,7 +32,7 @@ export default function TextInput({id, type, placeholder, name, value, accept, o
     full: 'rounded-full'
   }
 
-  const classes = `${sizeClasses[size]} ${radiusclasses[radius]} w-full mb-4 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className || ''}`;
+  const classes = `${sizeClasses[size]} ${radiusclasses[radius]} ${variantClasses[variant]} w-full mb-4 ${className || ''}`;
 
   return (
     <input

@@ -19,43 +19,46 @@ export default async function Products( {params}: ParamsPprops ) {
   console.log('Products page products:', products);
 
   return (
-    <div className='bg-white p-2 border border-gray-200 rounded-md m-4 '>
+    <>
+      <div className='bg-card p-2 border border-slate-500 rounded-md'>
 
-      <Card className='flex justify-between items-center p-4 bg-gray-50 border border-gray-200 rounded-lg mb-2'>
+        <Card className='flex justify-between items-center p-4 bg-card border border-slate-500 rounded-lg mb-2'>
 
-        <h1 className="text-2xl font-bold text-gray-800">Products</h1>
+          <h1 className="text-2xl font-bold text-gray-200">Products</h1>
 
-        <Link
-          href={`/dashboard/${slug}/products/new`}
-          className='py-2 px-3 bg-blue-500 text-white border border-blue-500 rounded-lg text-md hover:bg-white hover:text-blue-600 transition'
-        >
-          + Add Product
-        </Link>
-      </Card>
+          <Link
+            href={`/dashboard/${slug}/products/new`}
+            className='py-2 px-3 bg-linear-to-r from-primary-500 to-accent-500 text-white rounded-lg text-md transition'
+          >
+            + Add Product
+          </Link>
+        </Card>
+        
+        {products && products.length > 0 ? (
+          <>
+            <div className='hidden md:block p-2'>
+              <ProductTable products={products} />
+            </div>
+            
+            <div className='md:hidden p-2'>
+              <ProductCardList products={products}/>
+            </div>
+            
+          </>
+        ) : (
+          <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
+            <EmptyState 
+              title= 'No Product Added'
+              description='Click on Add Product to add your first Product'
+              actionText='Add Product'
+              actionLink='/dashboard/products/new'
+            />
+          </section>
+        )}
+
       
-      {products && products.length > 0 ? (
-        <>
-          <div className='hidden md:block p-2'>
-            <ProductTable products={products} />
-          </div>
-          
-          <div className='md:hidden p-2'>
-            <ProductCardList products={products}/>
-          </div>
-          
-        </>
-      ) : (
-        <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
-          <EmptyState 
-            title= 'No Product Added'
-            description='Click on Add Product to add your first Product'
-            actionText='Add Product'
-            actionLink='/dashboard/products/new'
-          />
-        </section>
-      )}
-
+      </div>
+    </>
     
-    </div>
   )
 }

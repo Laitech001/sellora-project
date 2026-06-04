@@ -65,7 +65,7 @@ export default function OrderRow({ order, onChange }: orderProps) {
   
   return (
     <tr 
-      className="text-left border-b border-gray-300 p-2 hover:bg-gray-100 transition"
+      className="text-left border-b border-slate-500 p-2 hover:bg-gray-100 transition"
     >
       <td className="py-3 font-semibold">{order.customer_name}</td>
       <td className='text-gray-500'>{order.customer_number}</td>
@@ -85,7 +85,7 @@ export default function OrderRow({ order, onChange }: orderProps) {
       <td>
         <select
           value={order.status}
-          className='cursor-pointer border border-gray-300 rounded py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className='cursor-pointer border border-gray-200 rounded py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           onChange={(e) => onChange(order.id, e.target.value)}
         >
           <option value='pending'>pending</option>
