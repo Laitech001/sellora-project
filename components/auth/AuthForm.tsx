@@ -9,9 +9,10 @@ import { supabase } from "@/lib/supabase";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Authform() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState<"signup" | "login">("signup");
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -73,13 +74,13 @@ export default function Authform() {
       });
 
       if (signUpError) {
-        setError(signUpError.message);
+        setSignupError(signUpError.message);
         return;
       }
 
       if (data) {
-        setSuccess(true);
-        setError(null);
+        setSignupSuccess(true);
+        setSignupError(null);
       }
 
     } catch (err) {
@@ -113,7 +114,7 @@ export default function Authform() {
       console.log(data);
 
       if (loginError) {
-        setError(loginError.message);
+        setLoginError(loginError.message);
         console.log(loginError.message);
         return;
       }
@@ -137,6 +138,13 @@ export default function Authform() {
     }
   }
 
+  // clear error when user switch between tabs
+  const handleTabSwitch = (tab: "signup" | "login") => {
+    setActiveTab(tab);
+    setSignupError(null);
+    setLoginError(null);
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div className="max-w-xl lg:min-w-md bg-white border-gray-200 font-semibold shadow-sm p-3 rounded-md">
@@ -157,7 +165,7 @@ export default function Authform() {
           {/* Buttons sit side by side, on top of the pill */}
           <button
             type="button"
-            onClick={() => setActiveTab("signup")}
+            onClick={() => handleTabSwitch("signup")}
             className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full transition-colors duration-300 ${
               activeTab === "signup" ? "text-gray-900 bg-gray-50" : "text-gray-400"
             }`}
@@ -167,7 +175,7 @@ export default function Authform() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("login")}
+            onClick={() => handleTabSwitch("login")}
             className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full transition-colors duration-300 ${
               activeTab === "login" ? "text-gray-900 bg-gray-50" : "text-gray-400"
             }`}
@@ -265,8 +273,8 @@ export default function Authform() {
               </button>
             </div>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {success &&
+            {signupError && <p style={{ color: 'red' }}>{signupError}</p>}
+            {signupSuccess &&
               <p style={{ color: 'green' }}>Signup successful! Please check your email to confirm your account.</p>
             }
 
@@ -276,7 +284,7 @@ export default function Authform() {
               disabled={loading}
               className='w-full rounded-full mt-4 bg-primary-500'
             >
-              {loading ? 'Signing Up...' : 'Sign Up'}
+              {loading ? 'Creating Account...' : 'Sign Up'}
             </Button>
           </Form>
         )}
@@ -350,7 +358,7 @@ export default function Authform() {
               </button>
             </div>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 
             <Button 
               type='submit'
