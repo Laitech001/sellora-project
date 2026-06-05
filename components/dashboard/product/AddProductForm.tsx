@@ -79,7 +79,7 @@ export default function AddProductForm({storeSlug}: Props) {
     <div className="max-w-xl mx-auto">
       <Form onSubmit={handleSubmit}>
 
-        <h1 className="title">Add Product</h1>
+        <h1 className="title text-center">Add Product</h1>
 
         <div>
           <Label htmlFor="name">Product Name</Label>

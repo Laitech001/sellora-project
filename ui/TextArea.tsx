@@ -22,7 +22,7 @@ export default function TextInput({id, placeholder, name, value, onChange, size 
     light: 'bg-white text-gray-800 border border-gray-300'
   }
 
-  const classes = `${sizeClasses[size]} ${variantClasses[variant]} w-full mb-4 border border-gray-300 rounded ${className || ''}`;
+  const classes = `${sizeClasses[size]} ${variantClasses[variant]} w-full mb-4 font-light border border-gray-300 rounded ${className || ''}`;
   return (
     <textarea
       id={id}

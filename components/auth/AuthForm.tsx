@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff } from "lucide-react";
+import { Mail, User, Eye, EyeOff } from "lucide-react";
 import { Form, TextInput, Label, Button } from '@/ui';
 import { supabase } from "@/lib/supabase";
 
@@ -190,8 +190,14 @@ export default function Authform() {
               <p className="text-gray-700 text-md font-light">Sign Up to set up your own store</p>
             </div>
 
-            <div className="flex flex-col justify-center">
-              <Label htmlFor="username" className="text-base text-gray-300">Username</Label>
+            <div className="relative">
+              <Label 
+                htmlFor="username" 
+                variant="light"
+              >
+                Username
+              </Label>
+
               <TextInput
                 id='username'
                 name="username"
@@ -199,12 +205,18 @@ export default function Authform() {
                 onChange={(e) => handleChange(e, "signup")}
                 placeholder='Enter your username'
                 radius="medium"
+                variant="light"
+                className="pl-10"
                 required
               />
+
+              <User className="absolute left-3 top-10 text-gray-700" size={18} />
             </div>
 
-            <div>
-              <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Label htmlFor="email" variant="light">
+                Email
+              </Label>
               <TextInput
                 id='email'
                 name="email"
@@ -213,22 +225,44 @@ export default function Authform() {
                 placeholder='Enter your email'
                 type='email'
                 radius="medium"
+                variant="light"
+                className="pl-10"
                 required
               />
+
+              <Mail className="absolute left-3 top-10 text-gray-700" size={18} />
             </div>
 
-            <div>
-              <Label>Password</Label>
+            <div className="relative">
+              <Label
+                htmlFor="password"
+                variant="light"
+              >
+                Password
+              </Label>
               <TextInput
                 id='password'
                 name="password"
                 value={signupData.password}
                 onChange={(e) => handleChange(e, "signup")}
                 placeholder='Enter your password'
-                type='password'
+                type={showSignupPassword ? 'text' : 'password'}
                 radius="medium"
+                variant="light"
                 required
               />
+
+              <button
+                type="button"
+                onClick={() => setShowSignupPassword(!showSignupPassword)}
+                className="absolute right-3 top-9.5 cursor-pointer text-gray-700"
+              >
+                {showSignupPassword ? (
+                  <EyeOff size={20} />
+                ) : (
+                  <Eye size={20} />
+                )}
+              </button>
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -261,8 +295,13 @@ export default function Authform() {
               </p>
             </div>
           
-            <div>
-              <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Label 
+                htmlFor="email" 
+                variant="light"
+              >
+                Email
+              </Label>
               <TextInput
                 id='email'
                 name="email"
@@ -271,22 +310,44 @@ export default function Authform() {
                 placeholder='Enter your email'
                 type='email'
                 radius="medium"
+                variant="light"
+                className="pl-10"
                 required
               />
+
+              <Mail className="absolute left-3 top-10 text-gray-700" size={18} />
             </div>
 
-            <div>
-              <Label>Password</Label>
+            <div className="relative">
+              <Label
+                htmlFor="password"
+                variant="light"
+              >
+                Password
+              </Label>
               <TextInput
                 id='password'
                 name="password"
                 value={loginData.password}
                 onChange={(e) => handleChange(e, "login")}
                 placeholder='Enter your password'
-                type='password'
+                type={showLoginPassword ? 'text' : 'password'}
                 radius="medium"
+                variant="light"
                 required
               />
+
+              <button
+                type="button"
+                onClick={() => setShowLoginPassword(!showLoginPassword)}
+                className="absolute right-3 top-9.5 cursor-pointer text-gray-700"
+              >
+                {showLoginPassword ? (
+                  <EyeOff size={20} />
+                ) : (
+                  <Eye size={20} />
+                )}
+              </button>
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
