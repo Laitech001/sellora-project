@@ -235,7 +235,7 @@ export default function CartClient({ slug }: CartClientProps) {
                 <Button type="submit" disabled={loading}>
                   {loading ? 'Placing Order...' : 'Order'}
                 </Button>
-                <Button onClick={onClose} varient="secondary">Cancel</Button>
+                <Button onClick={onClose} variant="secondary">Cancel</Button>
               </section>
             </Form>
           </Modal>

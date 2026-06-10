@@ -1,8 +1,8 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Pencil } from 'lucide-react'
-import DeleteButton from './DeleteButton'
+import { Pencil, Eye } from 'lucide-react'
+import DeleteButton from '../../actions/DeleteButton'
 
 type ProductRowProps = {
   products: {
@@ -42,7 +42,7 @@ export default function ProductRow({ products, editLink, onDelete, detailsLink }
   return (
     <tr 
       key={products.id}
-      className="text-left border-b border-gray-300 p-2 hover:bg-gray-100"
+      className="align-middle text-left border-b border-slate-500 py-3 px-4 hover:bg-slate-800/30 transition-all duration-200"
     >
       <td>
         { isValidImageUrl(products.image_url) && (
@@ -52,30 +52,43 @@ export default function ProductRow({ products, editLink, onDelete, detailsLink }
             width={60} 
             height={60}
             priority
-            className='p-2 rounded-md'
+            className='rounded-md p-2 object-cover'
           />
         )}
       </td>
       <td className="py-3">{products.name}</td>
-      <td className='font-semibold text-gray-800'>{formatPrice(products.price)}</td>
+      <td className='font-semibold text-gray-200'>{formatPrice(products.price)}</td>
       <td>
         <span 
-          className={`text-sm px-3 py-1 rounded-full ${
+          className={`text-sm px-3 py-1 rounded-md ${
             status === "active"
-              ? "bg-green-100 text-green-600"
-              : "bg-gray-200 text-gray-900"
+              ? "bg-emerald-600 text-content"
+              : "bg-slate-800 text-content"
           }`}
         >
           {status}
         </span>
       </td>
       <td>
-        <div className='flex justify-start items-center gap-10'>
+        <div className='flex justify-start items-center gap-5'>
+
+          <div className='relative group'>
+            <Link 
+              href={detailsLink}
+              className='bg-dark border border-slate-500 px-2 py-1 rounded inline-flex items-center justify-center'
+            >
+              <Eye size={18} />
+            </Link>
+
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1 rounded shadow-md border border-gray-700 opacity-0 group-hover:opacity-100 transition">
+              view details
+            </span>
+          </div>
 
           <div className='relative group'>
             <Link 
               href={editLink}
-              className="primary px-4 py-1 rounded inline-flex items-center justify-center"
+              className="gradient px-2 py-1 rounded inline-flex items-center justify-center"
             >
               <Pencil size={18} />
             </Link>
@@ -84,13 +97,6 @@ export default function ProductRow({ products, editLink, onDelete, detailsLink }
               Edit
             </span>
           </div>
-          
-          <Link 
-            href={detailsLink}
-            className='secondary px-2 py-1 rounded'
-          >
-            View Details
-          </Link>
 
           <div className='relative group'>
             

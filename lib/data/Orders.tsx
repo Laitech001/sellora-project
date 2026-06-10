@@ -106,3 +106,39 @@ export async function getOrdersBySlug(slug: string): Promise<Order[]> {
     return [];
   }
 }
+
+export async function getOrderItems(orderId: string) {
+  try {
+    const { data, error } = await supabase
+      .from('order_items')
+      .select('*')
+      .eq('order_id', orderId);
+
+    if (error) {
+      console.error('Failed to fetch order items:', error);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch order items:', error);
+    return [];
+  }
+}
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  try {
+    const { error } = await supabase
+      .from('orders')
+      .update({ status })
+      .eq('id', orderId);
+
+    if (error) {
+      console.error('Failed to update order status:', error);
+    }
+
+    return true;
+  } catch (error) {
+    console.error("unable to update order status", error);
+  }
+}

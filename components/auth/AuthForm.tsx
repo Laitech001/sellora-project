@@ -146,8 +146,8 @@ export default function Authform() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="max-w-xl lg:min-w-md bg-white border-gray-200 font-semibold shadow-sm p-3 rounded-md">
+    <div className="min-h-screen flex justify-center items-center px-4 py-8">
+      <div className="max-w-xl lg:min-w-md bg-white border-gray-200 font-semibold shadow-sm p-6 sm:px-8 sm:py-10 rounded-2xl">
 
         <div className="text-center mb-4">
           <h1 className="text-xl md:text-2xl font-semibold bg-linear-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">Sellora</h1>

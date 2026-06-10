@@ -7,9 +7,10 @@ interface ModalProps {
   onClose?: () => void
   children: React.ReactNode
   className?: string
+  variant?: 'dark' | 'light'
 }
 
-export default function Modal({ isOpen, onClose, children, className }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, className, variant = 'dark' }: ModalProps) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Modal({ isOpen, onClose, children, className }: ModalPro
     }
   }, [isOpen])
 
-  if (!isMounted || !isOpen) return null
+  if (!isMounted || !isOpen) return null;
 
   return createPortal(
     <div 
@@ -37,7 +38,7 @@ export default function Modal({ isOpen, onClose, children, className }: ModalPro
       onClick={onClose} // Clicking backdrop closes modal
     >
       <div 
-        className="bg-white rounded-lg p-6 relative max-w-md w-full mx-4 shadow-xl"
+        className={`rounded-lg p-6 relative max-w-lg w-full max-h-[90vh] mx-4 shadow-xl overflow-y-auto hide-scrollbar ${variant === 'dark' ? 'bg-card text-gray-200' : 'bg-white text-gray-800'}`}
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking modal content
       >
         <button

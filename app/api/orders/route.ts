@@ -1,5 +1,12 @@
 import { supabase } from "@/lib/supabase";
 
+type products = {
+  id: string;
+  name: string;
+  price: number;
+  image_url: string;
+}
+
 export async function GET() {
   const { data, error } = await supabase
     .from('orders')
@@ -134,6 +141,7 @@ export async function POST(request: Request) {
         product_id: item.productId,
         product_name: product.name,
         product_price: product.price,
+        product_image: product.image_url,
         quantity: item.quantity,
         subtotal: product.price * item.quantity,
       };

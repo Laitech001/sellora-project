@@ -1,7 +1,7 @@
 'use client'
 import { Table, Modal, Button, Card } from "@/ui";
 import ProductRow from "./ProductRow";
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { deleteProduct } from "@/lib/data/Products";
 import { LoadingSpinner, ErrorState } from '@/ui'
 
@@ -47,7 +47,7 @@ export default function ProductTable({ products }: ProductProps) {
     <>
       <Table className="border border-slate-500 rounded-lg shadow-md">
         <thead>
-          <tr className="text-left text-sm font-semibold text-gray-200 border-b border-slate-500 py-4">
+          <tr className="text-left text-sm font-light text-gray-200 border-b border-slate-500 py-4">
             <th className="py-3">Image</th>
             <th>Name</th>
             <th>Price</th>
@@ -74,8 +74,8 @@ export default function ProductTable({ products }: ProductProps) {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
           >
-            <Card className=" flex flex-col justify-center items-center p-6 gap-4 w-full max-w-md">
-              <p>Are you sure you want to delete this product!</p>
+            <Card className="flex flex-col justify-center items-center p-6 gap-4 w-full max-w-md">
+              <p className='text-content'>Are you sure you want to delete this product!</p>
 
               <section className="flex justify-center items-center gap-6">
                 <Button 

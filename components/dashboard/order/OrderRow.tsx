@@ -1,4 +1,5 @@
-import { Button } from '@/ui'
+import { ViewDetailsButton } from '../../actions';
+
 type orderProps = {
   order: {
     id: string;
@@ -10,10 +11,10 @@ type orderProps = {
     status: string;
     created_at: string;
   }
-  onChange: (orderId: string, status: string) => void
+  onClick: (orderId: string) => void
 }
 
-export default function OrderRow({ order, onChange }: orderProps) {
+export default function OrderRow({ order, onClick }: orderProps) {
 
   const statusStyles: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-600",
@@ -64,13 +65,21 @@ export default function OrderRow({ order, onChange }: orderProps) {
   };
   
   return (
-    <tr 
-      className="text-left border-b border-slate-500 p-2 hover:bg-gray-100 transition"
+    <tr
+      key={order.id} 
+      className="align-middle text-left border-b border-slate-500 p-2 hover:bg-slate-800/30 transition-all duration-500"
     >
-      <td className="py-3 font-semibold">{order.customer_name}</td>
-      <td className='text-gray-500'>{order.customer_number}</td>
-      <td>{order.total_items} items</td>
-      <td className="font-semibold text-gray-800">{formatPrice(order.total_price)}</td>
+      <td className="py-3 font-semibold">#{order.id.toString().padStart(4, '0')}</td>
+
+      <td className='flex flex-col gap-1'>
+        <p className='text-base text-content'>{order.customer_name}</p>
+        <p className='text-sm text-slate-400'>{order.customer_number}</p>
+      </td>
+
+      <td className="font-semibold text-content">
+        {formatPrice(order.total_price)}
+      </td>
+
       <td>
         <span
           className={`text-xs px-2 py-1 rounded-full font-medium ${
@@ -80,19 +89,19 @@ export default function OrderRow({ order, onChange }: orderProps) {
           {order.status}
         </span>
       </td>
-      <td>{order.total_quantity}</td>
+
       <td>{formatDate(order.created_at)}</td>
+
       <td>
-        <select
-          value={order.status}
-          className='cursor-pointer border border-gray-200 rounded py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          onChange={(e) => onChange(order.id, e.target.value)}
-        >
-          <option value='pending'>pending</option>
-          <option value='processing'>processing</option>
-          <option value='delivered'>delivered</option>
-          <option value='cancelled'>cancelled</option>
-        </select>
+        <div className='relative group'>
+          <ViewDetailsButton 
+            onClick={() => onClick(order.id)} 
+          />
+
+          <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1 rounded shadow-md border border-gray-700 opacity-0 group-hover:opacity-100 transition">
+            View details
+          </span>
+        </div>
       </td>
     </tr>
   )
