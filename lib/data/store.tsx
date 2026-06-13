@@ -1,12 +1,16 @@
 import { supabase } from "@/lib/supabase"
 
-type Props = {
+type Store = {
+  id: string
+  name: string
   slug: string
+  phone_number: number
+  address: string
+  business_type: string
+  user_id: string
 }
 
-export async function getStoreBySlug({ slug }: Props) {
-
-  console.log('searching for slug:', slug);
+export async function getStoreBySlug( slug: string): Promise<Store | null> {
   
   try {
     const { data, error } = await supabase
