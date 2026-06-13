@@ -212,7 +212,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
           </div>
 
           <div>
-            <h3 className="text-sm text-slate-400">
+            <h3 className="text-sm text-slate-400 mb-1">
               Update Status
             </h3>
 
@@ -221,7 +221,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
                 disabled={isFinalStatus || updateStatus !== null}
                 onClick={() => handleStatusUpdate('pending')}
                 className={`
-                  flex items-center gap-2
+                  w-full flex items-center gap-2 px-3 py-2 rounded-md bg-amber-500/20 text-amber-400 hover:bg-amber-500/10 transition-all
                   ${isFinalStatus ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
               >
@@ -233,7 +233,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
                 disabled={isFinalStatus || updateStatus !== null}
                 onClick={() => handleStatusUpdate('processing')}
                 className={`
-                  flex items-center gap-2
+                  w-full flex items-center gap-2 px-3 py-2 rounded-md bg-sky-500/20 text-blue-400 hover:bg-sky-500/10 transition-all
                   ${isFinalStatus ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
               >
@@ -245,7 +245,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
                 disabled={isFinalStatus || updateStatus !== null}
                 onClick={() => handleStatusUpdate('delivered')}
                 className={`
-                  flex items-center gap-2
+                  w-full flex items-center gap-2 px-3 py-2 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 transition-all
                   ${isFinalStatus ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
               >
@@ -257,7 +257,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
                 disabled={isFinalStatus || updateStatus !== null}
                 onClick={() => handleStatusUpdate('cancelled')}
                 className={`
-                  flex items-center gap-2
+                  w-full flex items-center gap-2 px-3 py-2 rounded-md bg-zinc-500/20 text-zinc-400 hover:bg-zinc-500/10 transition-all
                   ${isFinalStatus ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                 `}
               >

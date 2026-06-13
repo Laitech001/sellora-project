@@ -62,8 +62,8 @@ export default function ProductRow({ products, editLink, onDelete, detailsLink }
         <span 
           className={`text-sm px-3 py-1 rounded-md ${
             status === "active"
-              ? "bg-emerald-600 text-content"
-              : "bg-slate-800 text-content"
+              ? "bg-green-500/10 text-green-400 border border-green-500/20"
+              : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
           }`}
         >
           {status}

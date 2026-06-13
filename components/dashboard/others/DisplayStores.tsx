@@ -64,7 +64,12 @@ export default function DisplayStores({stores}: Props) {
             </div>
 
             <div className='hidden md:flex'>
-              <ChevronRight size={20} className="text-white cursor-pointer" />
+              <Link
+                href={`/dashboard/${store.slug}`}
+              >
+                <ChevronRight size={20} className="text-white cursor-pointer" />
+              </Link>
+              
             </div>
           </div>  
         ))

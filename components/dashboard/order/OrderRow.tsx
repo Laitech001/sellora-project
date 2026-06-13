@@ -17,10 +17,10 @@ type orderProps = {
 export default function OrderRow({ order, onClick }: orderProps) {
 
   const statusStyles: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-600",
-    processing: "bg-blue-100 text-blue-700",
-    delivered: "bg-green-100 text-green-600",
-    cancelled: "bg-red-100 text-red-600",
+    pending: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+    processing: "bg-sky-500/10 text-sky-400 border border-sky-500/20",
+    delivered: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+    cancelled: "bg-zinc-500/10 text-zinc-400 border border-zinc-500/20",
   };
 
   const getOrdinal = (day: any) => {
@@ -82,7 +82,7 @@ export default function OrderRow({ order, onClick }: orderProps) {
 
       <td>
         <span
-          className={`text-xs px-2 py-1 rounded-full font-medium ${
+          className={`text-sm px-3 py-1 rounded-md ${
             statusStyles[order.status] || "bg-gray-100 text-gray-600"
           }`}
         >
