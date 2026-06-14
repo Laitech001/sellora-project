@@ -12,6 +12,7 @@ import {
   Settings,
   LogOut  
 } from "lucide-react";
+import { useLogout } from '@/hooks/useLogout';
 
 type sidebarProps = {
   store: {
@@ -25,6 +26,7 @@ export default function Sidebar({ store }: sidebarProps) {
   const pathname = usePathname();
   const params = useParams();
   const slug = params.slug;
+  const { logout, isLoading } = useLogout();
   
   type NavLink = {
     href: string,
@@ -115,10 +117,17 @@ export default function Sidebar({ store }: sidebarProps) {
             </div>
           </div>
 
-          <div className='flex items-center gap-1 p-1 rounded-md border border-slate-500'>
-            <LogOut />
-            <p className='text-md text-content font-normal'>Log Out</p>
-          </div>
+          <button
+            onClick={logout}
+            disabled={isLoading}
+            className='flex items-center gap-2 p-2 rounded-md border border-slate-500 w-full cursor-pointer'
+          >
+            <LogOut size={18} className='text-red-400' />
+
+            <span className='text-red-400'>
+              {isLoading ? 'Logging out...' : 'Log Out'}
+            </span>
+          </button>
         </section>
         
       </aside>

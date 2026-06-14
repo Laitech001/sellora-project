@@ -26,7 +26,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
       <Sidebar store={store} />
 
       <main className="lg:ml-60">
-        <Header />
+        <Header store={store}/>
         <div className='p-2'>
           {children}
         </div>

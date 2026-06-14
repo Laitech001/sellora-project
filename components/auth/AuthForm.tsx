@@ -166,7 +166,7 @@ export default function Authform() {
           <button
             type="button"
             onClick={() => handleTabSwitch("signup")}
-            className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full transition-colors duration-300 ${
+            className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full cursor-pointer transition-colors duration-300 ${
               activeTab === "signup" ? "text-gray-900 bg-gray-50" : "text-gray-400"
             }`}
           >
@@ -176,7 +176,7 @@ export default function Authform() {
           <button
             type="button"
             onClick={() => handleTabSwitch("login")}
-            className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full transition-colors duration-300 ${
+            className={`relative z-10 w-1/2 py-1.5 text-base font-medium rounded-full cursor-pointer transition-colors duration-300 ${
               activeTab === "login" ? "text-gray-900 bg-gray-50" : "text-gray-400"
             }`}
           >

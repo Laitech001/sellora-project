@@ -7,8 +7,15 @@ import { usePathname } from 'next/navigation'
 import { ArrowRight } from "lucide-react";
 import { BrandLogoName } from '@/ui/Brand';
 
+type headerProps = {
+  store: {
+    id: string;
+    name: string;
+    slug: string;
+  }
+}
 
-export default function Header() {
+export default function Header({ store }: headerProps) {
   const pathName = usePathname();
   const segments = pathName.split('/').filter(Boolean);
 
@@ -16,7 +23,7 @@ export default function Header() {
     <div className='bg-dark w-full px-4 py-2 border-b border-slate-500'>
       {/* Mobile Header */}
       <div className='flex justify-between items-center overflow-x-hidden lg:hidden'>
-        <MenuButton />
+        <MenuButton store={store} />
 
         <BrandLogoName />
 

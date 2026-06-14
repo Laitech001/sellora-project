@@ -1,22 +1,35 @@
 "use client"
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useParams } from 'next/navigation';
+import { usePathname, useParams, notFound } from 'next/navigation';
 import { 
   LayoutDashboard,
   Package,
   ShoppingCart,
-  Users,
+  ChevronRight,
+  ArrowRight,
   BarChart3,
-  Settings  
+  Settings,
+  LogOut 
 } from "lucide-react";
-import { useState } from 'react'
+import { useState } from 'react';
+import { useLogout } from '@/hooks/useLogout';
+import { BrandLogoName } from '@/ui/Brand';
 
-export default function MenuButton() {
+type menuButtonProps = {
+  store: {
+    id: string;
+    name: string;
+    slug: string;
+  }
+}
+
+export default function MenuButton({ store }: menuButtonProps) {
   const params = useParams();
   const storeSlug = params.slug;
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { logout, isLoading } = useLogout();
 
   type NavLink = {
     href: string,
@@ -32,6 +45,15 @@ export default function MenuButton() {
     { href: `/dashboard/${storeSlug}/settings`, label: 'Settings', icon: Settings}
   ]
 
+  function getStoreInitials(name: string) {
+    return name
+      .split(" ")
+      .slice(0, 2)
+      .map(word => word[0])
+      .join("")
+      .toUpperCase();
+  }
+
   return (
     <div>
       <button onClick={() => setMenuOpen(!menuOpen)}>
@@ -46,12 +68,15 @@ export default function MenuButton() {
           />
 
           <aside 
-            className={`fixed top-0 left-0 h-screen w-60 bg-card text-gray-200 p-6 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
+            className={`fixed flex flex-col justify-between top-0 left-0 h-screen w-60 bg-card text-gray-200 p-4 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
           }>
-            <h1 className="text-xl md:text-3xl lg:text-4xl font-bold mb-6">Sellora</h1>
+            <section className='flex flex-col justify-between'>
+              <div className="mb-6">
+                <BrandLogoName />
+              </div>
 
-            <nav className="space-y-4">
-    
+              <nav className="space-y-3">
+      
                 {links.map((link) => {
                   const Icon = link.icon
                   const isActive = pathname === link.href
@@ -60,10 +85,10 @@ export default function MenuButton() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className={`flex flex-row items-center rounded-lg gap-4 p-2 cursor-pointer transition-colors ${
+                        className={`flex flex-row items-center rounded-lg gap-4 p-2 transition-colors ${
                           isActive
-                            ? 'bg-primary-200 text-primary-500'
-                            : 'text-gray-200 hover:bg-primary-200 hover:text-primary-500'
+                            ? 'bg-primary-500/20 text-primary-500'
+                            : 'text-gray-200 hover:bg-primary-500/20 hover:text-primary-500'
                         }`}
                       >
                         <Icon size={18} />
@@ -71,7 +96,55 @@ export default function MenuButton() {
                       </Link>
                   )
                 })}
-            </nav>
+              </nav>
+            </section>
+
+            <section className='space-y-1'>
+
+              <div className='flex justify-between items-center p-2 rounded-md border border-slate-500'>
+                  
+                <div className='flex items-center gap-1'>
+                  <section className='p-2 bg-circle-background border border-slate-500 rounded-full w-max'>
+                    <h1 className='font-semibold'>
+                      {getStoreInitials(store.name)}
+                    </h1>
+                  </section>
+
+                  <section className='flex flex-col'>
+                    <h1 className='font-semibold text-md'>{store.name}</h1>
+
+                    <Link 
+                      href={`/store/${store.slug}`}
+                      className='text-primary-500 hover:underline flex items-center gap-1'
+                    >
+                      <span>View Store</span>
+                      <ArrowRight size={16} />
+                    </Link>
+                  </section>
+                </div>
+
+                <div>
+                  <Link
+                    href={`/store/${store.slug}`}
+                  >
+                    <ChevronRight size={20} className="text-white cursor-pointer" />
+                  </Link>
+                  
+                </div>
+              </div>
+
+              <button
+                onClick={logout}
+                disabled={isLoading}
+                className='flex items-center gap-2 p-2 rounded-md border border-slate-500 w-full cursor-pointer'
+              >
+                <LogOut size={18} className='text-red-400' />
+
+                <span className='text-red-400'>
+                  {isLoading ? 'Logging out...' : 'Log Out'}
+                </span>
+              </button>
+            </section>
 
           </aside>
         </>
