@@ -192,10 +192,10 @@ export default function Authform() {
             className='animate-slide-in duration-300 border-none shadow-none'
           >
             
-            <div className="mb-4">
-              <h1 className="text-gray-800 text-lg md:text-xl">Welcome to Sellora</h1>
+            <div className="space-y-1 mb-6 flex flex-col items-center">
+              <h1 className="text-gray-800 text-lg md:text-xl">Start selling in minutes</h1>
 
-              <p className="text-gray-700 text-md font-light">Sign Up to set up your own store</p>
+              <p className="text-gray-700 text-md font-light">Create your free account and set up your store today.</p>
             </div>
 
             <div className="relative">
@@ -203,7 +203,7 @@ export default function Authform() {
                 htmlFor="username" 
                 variant="light"
               >
-                Username
+                Username <span className="text-sm text-gray-400">(optional)</span>
               </Label>
 
               <TextInput
@@ -223,14 +223,14 @@ export default function Authform() {
 
             <div className="relative">
               <Label htmlFor="email" variant="light">
-                Email
+                Email <span className="text-sm text-gray-400">(required)</span>
               </Label>
               <TextInput
                 id='email'
                 name="email"
                 value={signupData.email}
                 onChange={(e) => handleChange(e, "signup")}
-                placeholder='Enter your email'
+                placeholder='youremail@gmail.com'
                 type='email'
                 radius="medium"
                 variant="light"
@@ -246,14 +246,14 @@ export default function Authform() {
                 htmlFor="password"
                 variant="light"
               >
-                Password
+                Password <span className="text-sm text-gray-400">(required)</span>
               </Label>
               <TextInput
                 id='password'
                 name="password"
                 value={signupData.password}
                 onChange={(e) => handleChange(e, "signup")}
-                placeholder='Enter your password'
+                placeholder='8+ characters'
                 type={showSignupPassword ? 'text' : 'password'}
                 radius="medium"
                 variant="light"
@@ -294,12 +294,12 @@ export default function Authform() {
           <Form
             onSubmit={handleLogin} 
             variant="light"
-            className='animate-slide-fade'
+            className='animate-slide-in duration-300 border-none shadow-none'
           >
-            <div className="mb-4">
-              <h1 className="text-gray-800 text-lg md:text-xl">Welcome Back!</h1>
+            <div className="space-y-1 mb-6 flex flex-col items-center">
+              <h1 className="text-gray-800 text-lg md:text-xl">Welcome Back</h1>
               <p className="text-gray-700 text-md font-light">
-                Login to your account to continue
+                Log in to manage your store and track your business.
               </p>
             </div>
           
@@ -308,14 +308,14 @@ export default function Authform() {
                 htmlFor="email" 
                 variant="light"
               >
-                Email
+                Email <span className="text-sm text-gray-400">(required)</span>
               </Label>
               <TextInput
                 id='email'
                 name="email"
                 value={loginData.email}
                 onChange={(e) => handleChange(e, "login")}
-                placeholder='Enter your email'
+                placeholder='youremail@gmail.com'
                 type='email'
                 radius="medium"
                 variant="light"
@@ -331,14 +331,14 @@ export default function Authform() {
                 htmlFor="password"
                 variant="light"
               >
-                Password
+                Password <span className="text-sm text-gray-400">(required)</span>
               </Label>
               <TextInput
                 id='password'
                 name="password"
                 value={loginData.password}
                 onChange={(e) => handleChange(e, "login")}
-                placeholder='Enter your password'
+                placeholder='8+ characters'
                 type={showLoginPassword ? 'text' : 'password'}
                 radius="medium"
                 variant="light"
