@@ -23,7 +23,10 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
   };
 
   return (
-    <Card className="max-w-2xl">
+    <Card
+      variant="light"
+      className="max-w-xl p-2 border border-gray-200 shadow-md rounded-md"
+    >
       <section>
         <Image 
           src={product.image_url}
@@ -35,14 +38,14 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       </section>
 
       <section>
-        <h2 className="text-lg font-bold">{product.name}</h2>
-        <p className="text-gray-600">{product.description}</p>
-        <p className="text-blue-600 font-semibold">{formatPrice(product.price)}</p>
+        <h2 className="text-md font-bold">{product.name}</h2>
+        <p className="text-gray-500 text-sm">{product.description}</p>
+        <p className="text-emerald-400">{formatPrice(product.price)}</p>
       </section>
 
       <section className="flex flex-col md:flex-row justify-between items-center gap-3">
         {onAddToCart && (
-          <Button onClick={() => onAddToCart(product.id)} className="mr-2" size="small">
+          <Button onClick={() => onAddToCart(product.id)} className="m-auto w-full rounded" size="small">
             Add to Cart
           </Button>
         )}

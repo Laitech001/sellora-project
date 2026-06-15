@@ -6,7 +6,15 @@ import { useRouter, useParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-export default function Header() {
+type headerProps = {
+  store: {
+    id: string;
+    name: string;
+    slug: string;
+  }
+}
+
+export default function Header({ store }: headerProps) {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
@@ -54,7 +62,7 @@ export default function Header() {
         
         <div className="shrink-0">
           <h1 className="text-2xl text-primary-600 font-bold">
-            Sellora
+            {store.name}
           </h1>
         </div>
 
@@ -95,7 +103,7 @@ export default function Header() {
         <div className="flex justify-between items-center">
           
           <h1 className="text-xl md:text-2xl text-primary-600 font-bold">
-            Sellora
+            {store.name}
           </h1>
 
           <div className="flex items-center gap-4">
