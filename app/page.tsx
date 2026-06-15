@@ -1,11 +1,15 @@
 import Link from 'next/link';
+import { LandingPageHeader } from '@/components/landingPage'
+import { LandingPageHero } from '@/components/landingPage';
 
 export default function Home() {
   return (
-    <>
-      <h1>Home Page</h1>
+    <div className='min-h-screen bg-dark'>
 
-      <Link href='/signup'>Sign Up Page</Link>
-    </>
+      <LandingPageHeader />
+
+      <LandingPageHero />
+      
+    </div>
   );
 }
