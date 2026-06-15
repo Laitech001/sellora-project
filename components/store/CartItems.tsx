@@ -44,7 +44,7 @@ export default function CartItems({ item, increaseQuantity, decreaseQuantity, re
         </div>
 
         <div className='mt-2'>
-          <h1 className='text-xl md-2xl font-semibold'>{formatPrice(item.price)}</h1>
+          <h1 className='text-emerald-400 text-xl md-2xl font-semibold'>{formatPrice(item.price)}</h1>
         </div>
       </section>
 

@@ -1,8 +1,11 @@
 'use client'
 import { useState, useEffect } from "react";
-import CartItems from "./CartItems"
-import CartSummary from "./CartSummary"
-import { Card, Form, Modal, Label, TextInput, Button } from "@/ui";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import CartItems from "./CartItems";
+import CartSummary from "./CartSummary";
+import { Home } from 'lucide-react';
+import { Card, Form, Modal, Label, TextInput, Button, FloatingButton } from "@/ui";
 
 type CartClientProps = {
   slug: string;
@@ -18,6 +21,7 @@ type CartItem = {
 }
 
 export default function CartClient({ slug }: CartClientProps) {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -162,9 +166,23 @@ export default function CartClient({ slug }: CartClientProps) {
     <>
       <div className="lg:flex justify-center  gap-6">
         
-        <Card className='bg-white rounded-sm p-4 m-2 lg:min-w-3xl'>
+        <Card
+          variant="light" 
+          className='border border-gray-200 shadow rounded-sm p-4 m-2 lg:min-w-3xl'
+        >
           {cartItems.length === 0 ? (
-            <h1 className="text-center text-2xl font-semibold mt-10">Your cart is empty.</h1>
+            <div className="flex flex-col justify-center items-center gap-2">
+              <h1 className="text-2xl font-semibold mt-10">
+                Your cart is empty.
+              </h1>
+
+              <Link
+                href={`/store/${slug}`}
+                className='text-primary-500 hover:underline flex items-center gap-1'
+              >
+                Go to Homepage to Browse product
+              </Link>
+            </div>   
           ) : (
             <div className="space-y-4">
               {cartItems.map((item) => (
@@ -241,6 +259,12 @@ export default function CartClient({ slug }: CartClientProps) {
           </Modal>
         )
       }
+
+      <FloatingButton
+        onClick={() => {router.push(`/store/${slug}`)}}
+      >
+        <Home />
+      </FloatingButton>
     </>
   )
 }
