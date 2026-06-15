@@ -51,7 +51,7 @@ export default function CartItems({ item, increaseQuantity, decreaseQuantity, re
       <section className='flex items-center justify-between'>
         <div>
           <Button
-            varient='danger'
+            variant='danger'
             onClick={() => removeItem(item.productId)}
           >
             Remove

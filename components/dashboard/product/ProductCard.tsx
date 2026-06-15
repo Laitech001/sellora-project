@@ -38,35 +38,38 @@ export default function ProductCard({ product, editLink, detailsLink, onDelete }
   };
 
   return (
-    <Card className="mb-2 hover:shadow-md transition-shadow duration-300">
-      <section className='flex items-center gap-3'>
+    <Card
+      className="p-2 mb-2 rounded hover:shadow-md transition-shadow duration-300"
+    >
+      <section className='flex gap-3 mb-2'>
         { isValidImageUrl(product.image_url) && <Image 
           src={product.image_url}
           alt={product.name}
-          width={100} 
-          height={100}
+          width={60} 
+          height={60}
           className="w-auto h-auto object-cover rounded-lg"
         />}
 
-        <h2 className='text-xl text-gray-900 font-semibold'>{product.name}</h2>
-      </section>
+        <div className='space-y-1'>
+  
+          <h2 className='text-xl font-semibold'>{product.name}</h2>
 
-      <section className='mb-2'>
-        <p className='text-xl text-gray-900 font-semibold'>
-          {formatPrice(product.price)}
-        </p>
+          <p className='text-xl font-semibold'>
+            {formatPrice(product.price)}
+          </p>
 
-        <p className='text-xl text-gray-900'>
-          <strong>Status:</strong> 
-          <span className={`text-sm px-3 py-1 rounded-full ${
-              status === "active"
-                ? "bg-green-100 text-green-600"
-                : "bg-gray-200 text-gray-900"
-            }`}
-          >
-            {status}
-          </span>
-        </p>
+          <p className='text-xl'>
+            <strong>Status:</strong> 
+            <span className={`text-sm px-3 py-1 rounded-md ${
+                status === "active"
+                  ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                  : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
+              }`}
+            >
+              {status}
+            </span>
+          </p>
+        </div>
       </section>
 
       <section className='flex items-center gap-5'>
@@ -83,7 +86,7 @@ export default function ProductCard({ product, editLink, detailsLink, onDelete }
 
         <Button
           onClick={() => onDelete(product.id)}
-          varient='danger'
+          variant='danger'
           size='small' 
         >
           Delete

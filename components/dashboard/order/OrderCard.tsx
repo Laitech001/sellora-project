@@ -1,3 +1,6 @@
+import { Card } from '@/ui';
+import { ViewDetailsButton } from '@/components/actions';
+
 type orderProps = {
   order: {
     id: string;
@@ -9,9 +12,17 @@ type orderProps = {
     status: string;
     created_at: string;
   }
+  onClick: (orderId: string) => void
 }
 
-export default function RecentOrderCard({ order }: orderProps) {
+export default function RecentOrderCard({ order, onClick }: orderProps) {
+
+  const statusStyles: Record<string, string> = {
+    pending: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+    processing: "bg-sky-500/10 text-sky-400 border border-sky-500/20",
+    delivered: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+    cancelled: "bg-zinc-500/10 text-zinc-400 border border-zinc-500/20",
+  };
 
   // function to get ordinal suffix for date
    const getOrdinal = (day: any) => {
@@ -57,43 +68,67 @@ export default function RecentOrderCard({ order }: orderProps) {
     }).format(price);
   };
 
+  function getStoreInitials(name: string) {
+    return name
+      .split(" ")
+      .slice(0, 1)
+      .map(word => word[0])
+      .join("")
+      .toUpperCase();
+  }
 
   return (
     <>
       {/* Mobile layout */}
-      <div
-        className="bg-gray-50 border border-gray-200 rounded-xl shadow p-4 flex flex-col gap-2"
+      <Card
+        className="shadow p-4 flex flex-col gap-2"
       >
-        <div className="font-semibold text-gray-800">
-          {order.customer_name}
+        <div className='flex justify-between'>
+          <h1 className="font-semibold">#ORD-{order.id.toString().padStart(4, '0')}</h1>
+
+          <p className='text-slate-700 text-sm'>{formatDate(order.created_at)}</p>
         </div>
 
-        <div className="text-sm text-gray-500">
-          {order.customer_number}
+        <div className='flex justify-between'>
+          <section className='flex items-center gap-2'>
+            <section className='p-2 bg-primary-300 border border-primary-300 rounded-full w-max'>
+              <h1 className='text-primary-600 text-lg font-semibold'>
+                {getStoreInitials(order.customer_name)}
+              </h1>
+            </section>
+
+            <section className='flex flex-col gap-1'>
+              <h1>{order.customer_name}</h1>
+
+              <p className='text-sm text-slate-400'>{order.customer_number}</p>
+            </section>
+          </section>
+          
+          <section>
+            <h1 className='font-semibold text-content'>{formatPrice(order.total_price)}</h1>
+          </section>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-medium text-gray-700">
-            {formatPrice(order.total_price)}
-          </span>
-
           <span
-            className={`text-xs px-2 py-1 rounded-full ${
-              order.status === "completed"
-                ? "bg-green-100 text-green-600"
-                : order.status === "pending"
-                ? "bg-yellow-100 text-yellow-600"
-                : "bg-red-100 text-red-600"
+            className={`text-sm px-3 py-1 rounded-md ${
+              statusStyles[order.status] || "bg-gray-100 text-gray-600"
             }`}
           >
             {order.status}
           </span>
-        </div>
 
-        <div className="text-xs text-gray-400">
-          {formatDate(order.created_at)}
+          <div className='relative group'>
+            <ViewDetailsButton 
+              onClick={() => onClick(order.id)} 
+            />
+
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-3 py-1 rounded shadow-md border border-gray-700 opacity-0 group-hover:opacity-100 transition">
+              View details
+            </span>
+          </div>
         </div>
-      </div>
+      </Card>
     </>
     
   )

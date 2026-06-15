@@ -2,7 +2,7 @@ import { getOrdersBySlug, getRecentOrders } from "@/lib/data/Orders";
 import { getstats } from "@/lib/data/Stats"
 import DashboardStatsCard from "../../../components/dashboard/others/DashboardStatsCard"
 import Saleschart from "../../../components/dashboard/others/Saleschart"
-import { OrderCard, OrderTable} from '@/components/dashboard/order'
+import { OrderCard, OrderCardList, OrderTable} from '@/components/dashboard/order'
 import Link from "next/link";
 import { Card } from '@/ui';
 import { Package, ShoppingCart, DollarSign, Clock} from 'lucide-react'
@@ -102,15 +102,8 @@ export default async function Dashboard({ params }: ParamsPprops) {
         </Card>
 
         {/* mobile recent order layout */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-          {
-            recentOrders.map(order => (
-              <OrderCard
-                key={order.id} 
-                order={order}
-              />
-            ))
-          }
+        <section>
+          <OrderCardList orders={orders}/>
         </section>
 
         {/* desktop recent order layout */}

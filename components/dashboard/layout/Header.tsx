@@ -15,6 +15,15 @@ type headerProps = {
   }
 }
 
+function getStoreInitials(name: string) {
+    return name
+      .split(" ")
+      .slice(0, 2)
+      .map(word => word[0])
+      .join("")
+      .toUpperCase();
+  }
+
 export default function Header({ store }: headerProps) {
   const pathName = usePathname();
   const segments = pathName.split('/').filter(Boolean);
@@ -25,17 +34,21 @@ export default function Header({ store }: headerProps) {
       <div className='flex justify-between items-center overflow-x-hidden lg:hidden'>
         <MenuButton store={store} />
 
-        <BrandLogoName />
+        {segments.map((segment, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <span>{formatSegment(segment)}</span>
+          </div>
+        ))}
 
+        
         <div className="flex items-center gap-4">
-          <Link href="/dashboard/notifications" className="p-2 rounded-full bg-gray-200">
-            <Bell size={22} className='text-primary-500' />
-          </Link>
-
-          <Link href="/dashboard/profile" className="p-2 rounded-full bg-gray-200">
-            <User size={22} className='text-primary-500' />
-          </Link>
+          <section className='p-2 bg-circle-background border border-slate-500 rounded-full w-max'>
+            <h1 className='font-semibold'>
+              {getStoreInitials(store.name)}
+            </h1>
+          </section>
         </div>
+
       </div>
 
       {/* Desktop Header */}

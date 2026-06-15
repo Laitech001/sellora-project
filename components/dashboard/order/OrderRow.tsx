@@ -69,7 +69,7 @@ export default function OrderRow({ order, onClick }: orderProps) {
       key={order.id} 
       className="align-middle text-left border-b border-slate-500 p-2 hover:bg-slate-800/30 transition-all duration-500"
     >
-      <td className="py-3 font-semibold">#{order.id.toString().padStart(4, '0')}</td>
+      <td className="py-3 font-semibold">#ORD-{order.id.toString().padStart(4, '0')}</td>
 
       <td className='flex flex-col gap-1'>
         <p className='text-base text-content'>{order.customer_name}</p>

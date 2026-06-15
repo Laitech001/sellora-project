@@ -1,4 +1,4 @@
-import { OrderCard, OrderTable } from '@/components/dashboard/order'
+import { OrderCard, OrderCardList, OrderTable } from '@/components/dashboard/order'
 import { getOrdersBySlug } from '@/lib/data/Orders'
 import { Card } from '@/ui'
 
@@ -27,15 +27,8 @@ export default async function OrderPage({ params }: ParamsProps) {
         </p>
       </Card>
 
-      <section className='grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden'>
-        {
-          orders.map(order => (
-            <OrderCard
-              key={order.id}
-              order={order}
-            />
-          ))
-        }
+      <section>
+        <OrderCardList orders={orders}/>
       </section>
 
       <section className='hidden lg:block'>
