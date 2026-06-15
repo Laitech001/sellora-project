@@ -17,7 +17,7 @@ export default function TextInput({id, type, placeholder, name, value, accept, o
 
   const variantClasses = {
     default: 'border border-slate-700 text-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
-    light: 'bg-white text-gray-800 border border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500'
+    light: 'bg-white text-gray-800 border border-gray-200 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500'
   }
 
   const sizeClasses  = {

@@ -8,7 +8,7 @@ type Props = {
 
 export default async function ProductDetails({ params }: Props) {
   const { id } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const res = await fetch(`${baseUrl}/api/products/${id}`, {
     cache: "no-store",

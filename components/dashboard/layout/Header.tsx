@@ -1,11 +1,8 @@
 'use client'
 
-import { Bell, User,} from 'lucide-react'
 import MenuButton from './MobileSidebar'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowRight } from "lucide-react";
-import { BrandLogoName } from '@/ui/Brand';
 
 type headerProps = {
   store: {
@@ -27,6 +24,7 @@ function getStoreInitials(name: string) {
 export default function Header({ store }: headerProps) {
   const pathName = usePathname();
   const segments = pathName.split('/').filter(Boolean);
+  const currentPage = segments[segments.length - 1];
 
   return (
     <div className='bg-dark w-full px-4 py-2 border-b border-slate-500'>
@@ -34,11 +32,10 @@ export default function Header({ store }: headerProps) {
       <div className='flex justify-between items-center overflow-x-hidden lg:hidden'>
         <MenuButton store={store} />
 
-        {segments.map((segment, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <span>{formatSegment(segment)}</span>
-          </div>
-        ))}
+        
+        <div>
+          <h1 className='text-lg md:text-xl text-content font-semibold'>{currentPage}</h1>
+        </div>
 
         
         <div className="flex items-center gap-4">

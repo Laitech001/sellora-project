@@ -55,24 +55,25 @@ export default function ProductDetailsCard({product}: ProductProps) {
         />
       </Card>
 
-      <Card className="space-y-3">
-        <h1 className="text-xl font-semibold text-green-600">
+      <Card className="space-y-3 p-4">
+        <h1 className="text-lg font-semibold text-emerald-400">
           {product.name}
         </h1>
         <p className="text-xl font-semibold">
           {formatPrice(product.price)}
         </p>
-        <p className="font-semibold text-xl">
+        <p className="font-semibold text-md">
           <span className="font-semibold">Stock: </span>
           {product.stock}
         </p>
+        
         <p className="text-xl">
           <span className="font-semibold">Status: </span>
           <span 
             className={`text-sm px-3 py-1 rounded-full ${
               status === "active"
-                ? "bg-green-100 text-green-600"
-                : "bg-gray-200 text-gray-900"
+                ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
             }`}
           >
             {status}

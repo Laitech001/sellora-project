@@ -52,13 +52,13 @@ export default function ProductCard({ product, editLink, detailsLink, onDelete }
 
         <div className='space-y-1'>
   
-          <h2 className='text-xl font-semibold'>{product.name}</h2>
+          <h2 className='text-lg font-normal'>{product.name}</h2>
 
           <p className='text-xl font-semibold'>
             {formatPrice(product.price)}
           </p>
 
-          <p className='text-xl'>
+          <p className='text-md'>
             <strong>Status:</strong> 
             <span className={`text-sm px-3 py-1 rounded-md ${
                 status === "active"
