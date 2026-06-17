@@ -27,13 +27,13 @@ export default function SignUp() {
   ]
 
   return (
-    <div className='min-h-screen bg-linear-to-r from-primary-500 to-accent-500 bg-fixed overflow-x-hidden'>
+    <div className='min-h-screen bg-dark bg-fixed overflow-x-hidden'>
 
       <header className='p-2'>
         <BrandLogoName />
       </header>
       
-      <section className='flex items-center justify-center lg:justify-evenly lg:gap-6 lg:items-center'>
+      <section className='flex items-center justify-center lg:justify-evenly lg:gap-6'>
 
         <section className='hidden max-h-screen text-white lg:flex flex-col gap-6 p-4'>
 
@@ -68,7 +68,7 @@ export default function SignUp() {
           <p>Start building your online presence today</p>
         </section>
 
-        <section className='min-w-xl'>
+        <section>
           <AuthForm />
         </section> 
 

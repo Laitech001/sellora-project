@@ -43,7 +43,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="px-12 py-20 max-sm:px-5">
+    <section id='features' className="px-12 py-20 max-sm:px-5">
       <p className="text-center text-[11px] tracking-[0.12em] text-text-secondary uppercase mb-2.5">
         Everything your business needs
       </p>

@@ -1,8 +1,17 @@
 "use client";
 import { BrandLogoName } from "@/ui/Brand";
+import { Utensils } from "lucide-react";
 import Link from 'next/link'
 
 export default function Navbar() {
+
+  const navLinks = [
+    { label: "Features", href: "#features" },
+    { label: "How it works", href: "#how-it-works" },
+    { label: "Roadmap", href: "#roadmap" },
+    { label: "FAQ", href: "#faq" },
+  ];
+
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-12 h-16 bg-dark/85 backdrop-blur-xl border-b border-white/8">
 
@@ -10,13 +19,13 @@ export default function Navbar() {
 
       {/* Links */}
       <ul className="hidden md:flex items-center gap-8 list-none">
-        {["Features", "Pricing", "Docs", "Blog"].map((item) => (
-          <li key={item}>
+        {navLinks.map((item) => (
+          <li key={item.label}>
             <Link
-              href="#"
+              href={item.href}
               className="text-text-secondary text-sm no-underline hover:text-white transition-colors duration-200"
             >
-              {item}
+              {item.label}
             </Link>
           </li>
         ))}

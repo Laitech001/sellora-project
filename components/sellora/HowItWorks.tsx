@@ -15,9 +15,9 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="px-12 py-20 bg-[linear-gradient(180deg,transparent,rgba(124,58,237,0.06)_50%,transparent)] max-sm:px-5">
+    <section id="how-it-work" className="px-12 py-20 bg-[linear-gradient(180deg,transparent,rgba(124,58,237,0.06)_50%,transparent)] max-sm:px-5">
       <div className="max-w-150 mx-auto">
-        <p className="text-center text-[11px] tracking-[0.12em] text-[#94a3b8] uppercase mb-2.5">
+        <p className="text-center text-[11px] tracking-[0.12em] text-text-secondary uppercase mb-2.5">
           How it works
         </p>
         <h2 className="text-center text-[clamp(26px,3vw,36px)] font-bold font-display text-white tracking-[-0.02em] mb-12">
@@ -29,7 +29,7 @@ export default function HowItWorks() {
             <div key={step.title} className="flex gap-5">
               {/* Left: number + connector line */}
               <div className="flex flex-col items-center shrink">
-                <div className="w-9.5 h-9.5 rounded-full bg-linear-to-br from-[#7c3aed] to-[#db2777] flex items-center justify-center text-[14px] font-semibold text-white font-display shrink">
+                <div className="w-9.5 h-9.5 rounded-full bg-linear-to-br from-primary-600 to-accent-600 flex items-center justify-center text-[14px] font-semibold text-white font-display shrink">
                   {i + 1}
                 </div>
                 {i < steps.length - 1 && (
@@ -42,7 +42,7 @@ export default function HowItWorks() {
                 <h3 className="text-[16px] font-semibold text-white font-display mb-1.5">
                   {step.title}
                 </h3>
-                <p className="text-[14px] text-[#94a3b8] leading-[1.7]">{step.desc}</p>
+                <p className="text-[14px] text-text-secondary leading-[1.7]">{step.desc}</p>
               </div>
             </div>
           ))}
