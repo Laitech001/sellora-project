@@ -82,7 +82,7 @@ export default async function Dashboard({ params }: ParamsPprops) {
         }
       </div>
 
-      <div className="bg-card m-2 border border-slate-500 shadow-md rounded-xl">
+      <div className="bg-card m-2 rounded-xl">
         <Saleschart orders={orders}/>
       </div>
 

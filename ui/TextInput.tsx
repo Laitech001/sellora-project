@@ -5,6 +5,7 @@ type TextInputProps = {
   name?: string;
   value?: string | number;
   accept?: string;
+  multiple?: boolean;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   size?: 'small' | 'medium' | 'large';
@@ -13,7 +14,7 @@ type TextInputProps = {
   variant?: 'default' | 'light';
 }
 
-export default function TextInput({id, type, placeholder, name, value, accept, onChange, size = 'medium', radius = 'base', className, variant = 'default' }: TextInputProps) {
+export default function TextInput({id, type, placeholder, name, value, accept, multiple, onChange, size = 'medium', radius = 'base', className, variant = 'default' }: TextInputProps) {
 
   const variantClasses = {
     default: 'border border-slate-700 text-gray-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
@@ -42,6 +43,7 @@ export default function TextInput({id, type, placeholder, name, value, accept, o
       name={name}
       value={value}
       accept={accept}
+      multiple={multiple}
       onChange={onChange}
       className={classes}
     />

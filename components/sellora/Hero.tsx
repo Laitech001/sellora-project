@@ -1,6 +1,12 @@
+'use client'
+
 import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { useRouter } from 'next/navigation';
+
 
 export default function Hero() {
+  const router = useRouter();
+
   return (
     <section className="relative overflow-hidden px-12 pt-24 pb-20 text-center max-sm:px-5">
       {/* Glows */}
@@ -30,7 +36,10 @@ export default function Hero() {
 
         {/* Actions */}
         <div className="flex gap-3 justify-center flex-wrap">
-          <button className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-[10px] text-[15px] font-medium text-white bg-lineear-to-br from-primary-600 to accent-accent-600 hover:opacity-90 active:scale-[0.97] transition-all duration-200 cursor-pointer">
+          <button
+            onClick={() => {router.push('/signup')}} 
+            className="inline-flex items-center gap-1.5 px-7 py-3.5 rounded-[10px] text-[15px] font-medium text-white bg-lineear-to-br from-primary-600 to accent-accent-600 hover:opacity-90 active:scale-[0.97] transition-all duration-200 cursor-pointer"
+          >
             Create your store free
             <ArrowRight size={18} aria-hidden="true" />
           </button>

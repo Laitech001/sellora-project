@@ -14,7 +14,7 @@ export default function AddProductForm({storeSlug}: Props) {
     price: "",
     description: "",
     stock: "",
-    image: null as File | null,
+    images: [] as File[],
   })
 
   const [loading, setLoading] = useState(false);
@@ -27,10 +27,10 @@ export default function AddProductForm({storeSlug}: Props) {
     const { name, value } = target;
     const files = target.files;
 
-    if (name === "image" && files && files.length > 0) {
+    if (name === "images" && files) {
       setFormData(prev => ({
         ...prev,
-        image: files[0],
+        images: Array.from(files),
       }));
     } else {
       setFormData(prev => ({
@@ -41,8 +41,33 @@ export default function AddProductForm({storeSlug}: Props) {
   };
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     setLoading(true);
+
+    // Validate required fields
+    if (!formData.name.trim()) {
+      alert('Product name is required');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.price || Number(formData.price) <= 0) {
+      alert('Price must be a positive number');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      alert('Description is required');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.stock || Number(formData.stock) < 0) {
+      alert('Stock must be a non-negative number');
+      setLoading(false);
+      return;
+    }
 
     console.log('Form get the storeSlug:', storeSlug);
 
@@ -53,9 +78,10 @@ export default function AddProductForm({storeSlug}: Props) {
     form.append('price', formData.price);
     form.append('description', formData.description);
     form.append('stock', formData.stock);
-    if (formData.image) {
-      form.append('image', formData.image);
-    }
+
+    formData.images.forEach((image) => {
+      form.append('images', image);
+    });
 
     try {
       const res = await fetch(`/api/stores/${storeSlug}/products`, {
@@ -64,11 +90,15 @@ export default function AddProductForm({storeSlug}: Props) {
       })
 
       if (!res.ok) {
-        throw new Error('Failed to add product');
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to add product');
       }
+
+      alert('Product added successfully!');
     } catch (error) {
       console.error(error);
-      alert('Failed to add product');
+      const message = error instanceof Error ? error.message : 'Failed to add product';
+      alert(message);
     } finally {
       setLoading(false);
       router.back();
@@ -122,7 +152,7 @@ export default function AddProductForm({storeSlug}: Props) {
           <Label htmlFor="stock">Stocks</Label>
           <TextInput 
             id="stock"
-            type="text"
+            type="number"
             name="stock"
             placeholder="Stock"
             value={formData.stock}
@@ -135,9 +165,10 @@ export default function AddProductForm({storeSlug}: Props) {
           <TextInput 
             id="image"
             type="file"
-            name="image"
+            name="images"
             accept="image/*"
             onChange={handleChange}
+            multiple
           />
         </div>
         

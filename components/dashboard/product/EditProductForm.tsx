@@ -74,7 +74,7 @@ export default function EditProductForm({ product }: ProductProps) {
 
     try {
       const res = await fetch(`/api/products/${product.id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         body: form,
       });
 
@@ -161,7 +161,7 @@ export default function EditProductForm({ product }: ProductProps) {
           {loading ? "Updating..." : "Update Product"}
         </Button>
 
-        <Button onClick={handleCancel} type='button' varient='secondary'>
+        <Button onClick={handleCancel} type='button' variant='secondary'>
           Cancel
         </Button>
       </div>

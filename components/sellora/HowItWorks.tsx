@@ -15,7 +15,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-work" className="px-12 py-20 bg-[linear-gradient(180deg,transparent,rgba(124,58,237,0.06)_50%,transparent)] max-sm:px-5">
+    <section id="howItWorks" className="px-12 py-20 bg-[linear-gradient(180deg,transparent,rgba(124,58,237,0.06)_50%,transparent)] max-sm:px-5">
       <div className="max-w-150 mx-auto">
         <p className="text-center text-[11px] tracking-[0.12em] text-text-secondary uppercase mb-2.5">
           How it works
