@@ -5,6 +5,15 @@ import { useState } from 'react'
 import { deleteProduct } from "@/lib/data/Products";
 import { LoadingSpinner, ErrorState } from '@/ui'
 
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
+
 type ProductProps = {
   products: {
     id: string;
@@ -12,8 +21,10 @@ type ProductProps = {
     price: number;
     description: string;
     stock: number;
-    image_url: string; 
-  }[];
+    store_id: string;
+
+    product_images: ProductImage[];
+  }[]
 };
 
 export default function ProductTable({ products }: ProductProps) {

@@ -1,12 +1,21 @@
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
 
 type Product = {
   id: string;
   name: string;
   price: number;
   description: string;
-  image_url: string;
   stock: number;
   store_id: string;
+
+  product_images: ProductImage[];
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;

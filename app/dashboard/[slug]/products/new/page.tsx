@@ -11,10 +11,10 @@ export default async function NewProduct({ params }: Props) {
   console.log('New Product page slug:', slug);
 
   return (
-    <>
+    <div className="lg:flex justify-between">
       <Instruction />
 
       <AddProductForm storeSlug={slug} />
-    </>
+    </div>
   )
 }

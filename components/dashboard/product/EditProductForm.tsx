@@ -97,74 +97,79 @@ export default function EditProductForm({ product }: ProductProps) {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <h1 className='title'>Edit Product</h1>
+    <div className='max-w-xl mx-auto'>
+      <Form onSubmit={handleSubmit}>
+        <h1 className='title'>Edit Product</h1>
 
-      <div>
-        <Label htmlFor='name'>Product Name</Label>
-        <TextInput
-          id='name'
-          placeholder='Product Name'
-          name='name'
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-        />
-      </div>
+        <div>
+          <Label htmlFor='name'>Product Name</Label>
+          <TextInput
+            id='name'
+            placeholder='Product Name'
+            name='name'
+            value={formData.name}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+          />
+        </div>
 
-      <div>
-        <Label htmlFor='price'>Product Price</Label>
-        <TextInput
-          id='price'
-          placeholder='Product Price'
-          name='price'
-          type='number'
-          value={formData.price}
-          onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-        />
-      </div>
+        <section className="lg:flex items-center justify-between gap-2">
 
-      <div>
-        <Label htmlFor='description'>Product Description</Label>
-        <TextArea
-          id='description'
-          placeholder='Product Description'
-          name='description'
-          value={formData.description}
-          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-        />
-      </div>
+          <div>
+            <Label htmlFor='price'>Product Price</Label>
+            <TextInput
+              id='price'
+              placeholder='Product Price'
+              name='price'
+              type='number'
+              value={formData.price}
+              onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+            />
+          </div>
 
-      <div>
-        <Label htmlFor='stock'>Product Stock</Label>
-        <TextInput
-          id='stock'
-          placeholder='Product Stock'
-          name='stock'
-          type='number'
-          value={formData.stock}
-          onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
-        />
-      </div>
+          <div>
+            <Label htmlFor='stock'>Product Stock</Label>
+            <TextInput
+              id='stock'
+              placeholder='Product Stock'
+              name='stock'
+              type='number'
+              value={formData.stock}
+              onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
+            />
+          </div>
+        </section>
 
-      <div>
-        <Label htmlFor='image'>Product Image</Label>
-        <TextInput
-          id='image'
-          name='image'
-          type='file'
-          onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.files ? e.target.files[0] : prev.image }))}
-        />
-      </div>
+        <div>
+          <Label htmlFor='description'>Product Description</Label>
+          <TextArea
+            id='description'
+            placeholder='Product Description'
+            name='description'
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          />
+        </div>
 
-      <div className='flex items-center gap-4'>
-        <Button type='submit' disabled={loading}>
-          {loading ? "Updating..." : "Update Product"}
-        </Button>
+        <div>
+          <Label htmlFor='image'>Product Image</Label>
+          <TextInput
+            id='image'
+            name='image'
+            type='file'
+            onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.files ? e.target.files[0] : prev.image }))}
+          />
+        </div>
 
-        <Button onClick={handleCancel} type='button' variant='secondary'>
-          Cancel
-        </Button>
-      </div>
-    </Form>  
+        <div className='flex items-center gap-4'>
+          <Button type='submit' disabled={loading}>
+            {loading ? "Updating..." : "Update Product"}
+          </Button>
+
+          <Button onClick={handleCancel} type='button' variant='secondary'>
+            Cancel
+          </Button>
+        </div>
+      </Form>
+    </div>    
   )
 }

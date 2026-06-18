@@ -4,6 +4,15 @@ import Image from 'next/image'
 import { Pencil, Eye } from 'lucide-react'
 import DeleteButton from '../../actions/DeleteButton'
 
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
+
 type ProductRowProps = {
   products: {
     id: string;
@@ -11,7 +20,9 @@ type ProductRowProps = {
     price: number;
     description: string;
     stock: number;
-    image_url: string; 
+    store_id: string;
+
+    product_images: ProductImage[];
   }
   editLink: string
   onDelete: (id: string) => void
@@ -39,20 +50,26 @@ export default function ProductRow({ products, editLink, onDelete, detailsLink }
     }
   };
 
+  const primaryImage =
+    products.product_images?.find((img) => img.is_primary) ||
+    products.product_images?.[0];
+
+  const imageUrl = primaryImage?.image_url;
+
   return (
     <tr 
       key={products.id}
       className="align-middle text-left border-b border-slate-500 py-3 px-4 hover:bg-slate-800/30 transition-all duration-200"
     >
       <td>
-        { isValidImageUrl(products.image_url) && (
-          <Image 
-            src={products.image_url!} 
+        {imageUrl && isValidImageUrl(imageUrl) && (
+          <Image
+            src={imageUrl}
             alt={products.name}
-            width={60} 
+            width={60}
             height={60}
             priority
-            className='rounded-md p-2 object-cover'
+            className="rounded-md p-2 object-cover"
           />
         )}
       </td>
