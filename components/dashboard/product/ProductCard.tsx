@@ -2,6 +2,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, Button } from '@/ui';
 
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
+
 type ProductCardProps = {
   product: {
     id: string;
@@ -9,7 +18,9 @@ type ProductCardProps = {
     price: number;
     description: string;
     stock: number;
-    image_url: string;
+    store_id: string;
+
+    product_images: ProductImage[];
   }
   editLink: string;
   detailsLink: string;
@@ -37,13 +48,19 @@ export default function ProductCard({ product, editLink, detailsLink, onDelete }
     }
   };
 
+  const primaryImage =
+    product.product_images?.find((img) => img.is_primary) ||
+    product.product_images?.[0];
+
+  const imageUrl = primaryImage?.image_url;
+
   return (
     <Card
       className="p-2 mb-2 rounded hover:shadow-md transition-shadow duration-300"
     >
       <section className='flex gap-3 mb-2'>
-        { isValidImageUrl(product.image_url) && <Image 
-          src={product.image_url}
+        { isValidImageUrl(imageUrl) && <Image 
+          src={imageUrl}
           alt={product.name}
           width={60} 
           height={60}

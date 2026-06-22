@@ -1,4 +1,4 @@
-import { ProductDetailsCard } from "@/components/dashboard/product";
+import { DashboardProductPage } from '@/components/dashboard/product'
 
 type Props = {
   params: {
@@ -20,10 +20,11 @@ export default async function ProductDetails({ params }: Props) {
 
   const product = await res.json();
 
-
   return (
     <>
-      <ProductDetailsCard product={product}/>
+      {/* <ProductDetailsCard product={product}/> */}
+
+      <DashboardProductPage product={product}/>
     </>
   )
 }

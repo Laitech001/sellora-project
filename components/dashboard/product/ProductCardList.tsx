@@ -2,18 +2,29 @@
 import ProductCard from "./ProductCard"
 import { deleteProduct} from "@/lib/data/Products"
 
-type Product = {
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
+
+type productProps = {
   products: {
     id: string;
     name: string;
     price: number;
     description: string;
     stock: number;
-    image_url: string;
+    store_id: string;
+
+    product_images: ProductImage[];
   }[]
 }
 
-export default function ProductCardList({products}: Product) {
+export default function ProductCardList({products}: productProps) {
 
 
   const handleDelete = async (id: string) => {

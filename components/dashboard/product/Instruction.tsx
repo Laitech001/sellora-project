@@ -35,7 +35,10 @@ export default function Instruction() {
         {
           instructions.map((instruction) => (
             <ul>
-              <li className="mb-2">
+              <li 
+                key={instruction.title} 
+                className="mb-2"
+              >
                 <div className="flex items-center gap-2">
                   <instruction.image size={20} className="text-primary-400"/>
 

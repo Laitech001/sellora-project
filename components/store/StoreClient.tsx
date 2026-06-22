@@ -1,5 +1,15 @@
 'use client';
 import ProductCard from "./ProductCard"
+import { addProductToCart } from "@/lib/cart"
+
+type ProductImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  storage_path: string;
+  is_primary: boolean;
+  created_at: string;
+};
 
 type ProductProps = {
   products: {
@@ -7,22 +17,15 @@ type ProductProps = {
     name: string;
     price: number;
     description: string;
-    image_url: string;
+    stock: number;
     store_id: string;
-  }[];
+
+    product_images: ProductImage[];
+  }[]
   slug: string;
 }
 
-export type CartItem = {
-  productId: string;
-  slug: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-};
-
-export default function StoreClient({products, slug}: ProductProps) {
+export default function StoreClient({ products, slug }: ProductProps) {
 
   const handleAddToCart = (productId: string) => {
     const product = products.find((item) => item.id === productId);
@@ -32,52 +35,19 @@ export default function StoreClient({products, slug}: ProductProps) {
       return;
     }
 
-    const cartItem: CartItem = {
-      productId,
-      slug: product.store_id,
-      name: product.name,
-      price: product.price,
-      image: product.image_url,
-      quantity: 1,
-    };
-
-    const existingCart = localStorage.getItem(
-      `cart-${slug}`
-    );
-
-    const cartItems: CartItem[] = existingCart
-      ? JSON.parse(existingCart)
-      : [];
-
-    const existingItem = cartItems.find(
-      (item) => item.productId === productId
-    );
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cartItems.push(cartItem);
-    }
-
-    localStorage.setItem(
-      `cart-${slug}`,
-      JSON.stringify(cartItems)
-    );
-
-    window.dispatchEvent(new Event("cartUpdated"));
+    addProductToCart(product, slug);
 
     alert('Product added to cart');
-
-    console.log('Cart items after adding:', cartItems);
   };
 
   return (
     <>
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center items-center py-8 px-4">
         {products.map((product) => (
-          <ProductCard 
+          <ProductCard
             key={product.id}
-            product={product} 
+            product={product}
+            slug={slug}
             onAddToCart={handleAddToCart}
           />
         ))}

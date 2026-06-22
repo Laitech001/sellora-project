@@ -112,7 +112,7 @@ const [storeData, setStoreData] = useState({
               <Label htmlFor="phoneNumber">Phone Number</Label>
               <TextInput 
                 id="phoneNumber"
-                type="text"
+                type="tel"
                 name="phoneNumber"
                 value={storeData.phoneNumber}
                 placeholder="Enter Your Phone Number"
