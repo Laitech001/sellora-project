@@ -120,7 +120,7 @@ const MAX_IMAGES = 4;
 // PATCH /api/products/[productId]
 //
 // Handles three independent concerns in one request:
-//   1. Updating text fields (name, price, description, stocks)
+//   1. Updating text fields (name, price, description, stock)
 //   2. Removing specific images (by their product_images.id)
 //   3. Adding new image files (same upload pattern as POST)
 //
@@ -160,12 +160,12 @@ export async function PATCH(request: Request, context: ParamsProps) {
     // ── Step 1: Update text fields ──
     // Build the update object dynamically so we only touch fields
     // that were actually sent — this lets the frontend send just
-    // "price" alone without needing to resend name/description/stocks.
+    // "price" alone without needing to resend name/description/stock.
     const fieldsToUpdate: Record<string, string | number> = {};
     if (name !== null) fieldsToUpdate.name = name;
     if (price !== null) fieldsToUpdate.price = Number(price);
     if (description !== null) fieldsToUpdate.description = description;
-    if (stock !== null) fieldsToUpdate.stocks = Number(stock);
+    if (stock !== null) fieldsToUpdate.stock = Number(stock);
 
     if (Object.keys(fieldsToUpdate).length > 0) {
       const { error: updateError } = await supabase
