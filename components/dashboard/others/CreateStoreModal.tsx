@@ -15,7 +15,7 @@ const [error, setError] = useState(false);
 const [storeData, setStoreData] = useState({
   storeName: '',
   slug: '',
-  phoneNumber: '',
+  whatsappNumber: '',
   businessType: '',
   address: ''
 });
@@ -80,7 +80,7 @@ const [storeData, setStoreData] = useState({
       setStoreData({
         storeName: '',
         slug: '',
-        phoneNumber: '',
+        whatsappNumber: '',
         businessType: '',
         address: ''
       })
@@ -96,7 +96,7 @@ const [storeData, setStoreData] = useState({
             <h1 className='text-center'>Create Store</h1>
 
             <div>
-              <Label htmlFor="storeName">Store Name</Label>
+              <Label htmlFor="storeName">Store Name <span className="text-xs text-text-secondary font-normal">(required)</span></Label>
               <TextInput 
                 id="storeName"
                 type="text"
@@ -109,20 +109,24 @@ const [storeData, setStoreData] = useState({
             </div>
 
             <div>
-              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Label htmlFor="whatsappNumber">Whatsapp Number <span className="text-xs text-text-secondary font-normal">(required)</span></Label>
               <TextInput 
-                id="phoneNumber"
+                id="whatsappNumber"
                 type="tel"
-                name="phoneNumber"
-                value={storeData.phoneNumber}
+                name="whatsappNumber"
+                value={storeData.whatsappNumber}
                 placeholder="Enter Your Phone Number"
                 onChange={handleChange}
                 required
               />
+
+              <p className="mb-2 text-sm text-gray-400">
+                An active WhatsApp number is required. Customer orders and store-related updates will be sent to this number.
+              </p>
             </div>
 
             <div>
-              <Label htmlFor="businessType">Business Type</Label>
+              <Label htmlFor="businessType">Business Type <span className="text-xs text-text-secondary font-normal">(required)</span></Label>
               <TextInput 
                 id="businessType"
                 type="text"
@@ -135,7 +139,7 @@ const [storeData, setStoreData] = useState({
             </div>
 
             <div>
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address">Address <span className="text-xs text-text-secondary font-normal">(optional)</span></Label>
               <TextArea 
                 id="address"
                 name="address"
@@ -146,7 +150,7 @@ const [storeData, setStoreData] = useState({
             </div>
 
             <div>
-              <Label htmlFor="storeslug">Store Slug</Label>
+              <Label htmlFor="storeslug">Store Slug <span className="text-xs text-text-secondary font-normal">(auto generated)</span></Label>
               <TextInput 
                 id="storeslug"
                 type="text"
@@ -166,6 +170,7 @@ const [storeData, setStoreData] = useState({
             <Button
               type='submit'
               disabled={loading}
+              className='w-full rounded-full'
             >
               {loading ? 'Creating Store...' : 'Create Store'}
             </Button>

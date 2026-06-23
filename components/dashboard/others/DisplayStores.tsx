@@ -7,7 +7,7 @@ type Props = {
     id: string;
     name: string;
     slug: string;
-    phone_number: string;
+    whatsapp_number: string;
     business_type: string;
     address: string | null;
     created_at: string;
@@ -50,7 +50,7 @@ export default function DisplayStores({stores}: Props) {
                 className='text-gray-200 text-sm flex items-center gap-1'
               >
                 <Phone size={16} />
-                <span>Phone Number: {store.phone_number}</span>
+                <span>Whatsapp Number: {store.whatsapp_number}</span>
               </p>
               
               <Link 

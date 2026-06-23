@@ -49,13 +49,13 @@ export default function ProductCard({ product, slug, onAddToCart }: ProductCardP
 
   const imageUrl = primaryImage?.image_url;
   return (
-    <Link href={`/store/${slug}/${product.id}`}>
-      <Card
-        variant="light"
-        className="max-w-xl p-2 border border-gray-200 shadow-md rounded-md cursor-pointer 
-        transition-all duration-300 ease-out
-        hover:-translate-y-1 hover:shadow-lg"
-      >
+    <Card
+      variant="light"
+      className="max-w-xl p-2 border border-gray-200 shadow-md rounded-md cursor-pointer 
+      transition-all duration-300 ease-out
+      hover:-translate-y-1 hover:shadow-lg"
+    >
+      <Link href={`/store/${slug}/${product.id}`}>
         <section>
           {
             imageUrl && isValidImageUrl(imageUrl) && (
@@ -75,16 +75,16 @@ export default function ProductCard({ product, slug, onAddToCart }: ProductCardP
           <p className="text-gray-500 text-sm">{product.description}</p>
           <p className="text-emerald-400">{formatPrice(product.price)}</p>
         </section>
+      </Link>
 
-        <section className="flex flex-col md:flex-row justify-between items-center gap-3">
-          {onAddToCart && (
-            <Button onClick={() => onAddToCart(product.id)} className="m-auto w-full rounded" size="small">
-              Add to Cart
-            </Button>
-          )}
-        </section>
-      </Card>
-    </Link>
+      <section className="flex flex-col md:flex-row justify-between items-center gap-3">
+        {onAddToCart && (
+          <Button onClick={() => onAddToCart(product.id)} className="m-auto w-full rounded" size="small">
+            Add to Cart
+          </Button>
+        )}
+      </section>
+    </Card>
     
   )
 }  

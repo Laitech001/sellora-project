@@ -8,12 +8,14 @@ type CartSummaryProps = {
 }
 
 export default function CartSummary({ totalItems, totalPrice, onClick }: CartSummaryProps) {
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
       currency: "NGN",
     }).format(price);
   };
+  
   return (
     <Card
       variant='light' 

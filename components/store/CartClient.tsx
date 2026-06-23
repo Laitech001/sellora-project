@@ -148,10 +148,20 @@ export default function CartClient({ slug }: CartClientProps) {
 
       console.log('Order response:', data);
 
+      if (data.hasWhatsapp && data.whatsappUrl) {
+        window.location.href = data.whatsappUrl;
+      } else {
+        alert(
+          "Your order has been placed! The seller will reach out to confirm details soon."
+        );
+      }
+
       if (!res.ok) {
         console.error('Order error response:', data);
         throw new Error(data.error || 'Failed to place order');
       }
+
+      localStorage.removeItem("cart");
     } catch (error) {
       console.error('Error submitting order:', error);
       alert('There was an error submitting your order. Please try again.');

@@ -1,4 +1,6 @@
 import { StorefrontProductPage } from "@/components/store";
+import { getStoreBySlug } from "@/lib/data/store";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -10,6 +12,12 @@ type Props = {
 export default async function StorefrontProductDetails({ params }: Props) {
   const { id, slug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  const store = await getStoreBySlug(slug);
+
+  if (!store) {
+    notFound();
+  }
 
   console.log(slug);
 
@@ -23,5 +31,5 @@ export default async function StorefrontProductDetails({ params }: Props) {
 
   const product = await res.json();
 
-  return <StorefrontProductPage product={product} slug={slug} />;
+  return <StorefrontProductPage product={product} store={store} />;
 }

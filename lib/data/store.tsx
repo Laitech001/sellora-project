@@ -4,7 +4,7 @@ type Store = {
   id: string
   name: string
   slug: string
-  phone_number: number
+  whatsapp_number: string
   address: string
   business_type: string
   user_id: string

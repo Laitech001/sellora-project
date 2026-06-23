@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { storeName, slug, phoneNumber, businessType, address } = body;
+    const { storeName, slug, whatsappNumber, businessType, address } = body;
 
     // Validate required fields
     if (!storeName || !slug) {
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       .insert({
         name: storeName,
         slug,
-        phone_number: phoneNumber,
+        whatsapp_number: whatsappNumber,
         business_type: businessType,
         address,
         user_id: user.id,  // ← always from server session, never from client
