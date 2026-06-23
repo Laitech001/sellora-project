@@ -3,7 +3,7 @@ import { Table, Modal, Button, Card } from "@/ui";
 import ProductRow from "./ProductRow";
 import { useState } from 'react'
 import { deleteProduct } from "@/lib/data/Products";
-import { LoadingSpinner, ErrorState } from '@/ui'
+import { useRouter } from 'next/navigation';
 
 type ProductImage = {
   id: string;
@@ -28,8 +28,7 @@ type ProductProps = {
 };
 
 export default function ProductTable({ products }: ProductProps) {
-
-  console.log('ProductTable products:', products);
+  const router = useRouter();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -49,6 +48,7 @@ export default function ProductTable({ products }: ProductProps) {
       await deleteProduct(id);
       setIsModalOpen(false);
       setSelectedId(null);
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

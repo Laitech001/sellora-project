@@ -84,11 +84,10 @@ export const deleteProduct = async (id: string) => {
       method: 'DELETE'
     });
 
-    console.log(`Deleting product with id: ${id}`);
-    console.log('Delete response:', res);
     if (!res.ok) {
       console.error('Failed to delete product')
     }
+    
   } catch (error) {
     console.error('Failed to delete product');
     throw error;

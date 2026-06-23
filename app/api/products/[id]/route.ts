@@ -42,8 +42,7 @@ export async function GET(request: Request, { params }: Params) {
 export async function DELETE(request: Request, context: ParamsProps) {
   try {
     // Await params first
-    const params = await context.params;
-    const { id } = params;
+    const { id } = await context.params;
 
     // Now check id (not params.id)
     if (!id) {
@@ -63,8 +62,8 @@ export async function DELETE(request: Request, context: ParamsProps) {
     }
 
     // Check if product is used in order
-    const { data: orders, error: orderCheckError } = await supabase
-      .from('orders')
+    const { data: orderItems, error: orderCheckError } = await supabase
+      .from('order_items')
       .select('id')
       .eq('product_id', productId)
       .limit(1);
@@ -78,13 +77,40 @@ export async function DELETE(request: Request, context: ParamsProps) {
     }
 
     // prevent deletion if product is used in order
-    if (orders && orders.length > 0) {
+    if (orderItems && orderItems.length > 0) {
       return Response.json(
         { success: false,
           message: 'Cannot delete product, it is refrenced in existing order'
         },
         { status: 409 },
       )
+    }
+
+    // get product images;
+    const { data: images } = await supabase
+      .from('product_images')
+      .select('*')
+      .eq('product_id', productId);
+
+    // Delete files from storage;
+    if (images?.length) {
+      await supabase.storage
+        .from("product-image")
+        .remove(images.map(img => img.storage_path));
+    }
+
+    // delete images that reference products.id
+    const { error: imageError } = await supabase
+      .from('product_images')
+      .delete()
+      .eq('product_id', productId);
+      
+    if (imageError) {
+      console.error('Deleting Image error:', imageError);
+      return Response.json(
+        { success: false, message: imageError.message },
+        { status: 500 }
+      );
     }
 
     const { error } = await supabase

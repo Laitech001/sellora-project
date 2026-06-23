@@ -170,6 +170,8 @@ export default function EditProductForm({ product }: ProductProps) {
       }
 
       alert('Product updated successfully!');
+
+      router.refresh();
     } catch (error) {
       console.error(error);
       const message = error instanceof Error ? error.message : 'Failed to update product';

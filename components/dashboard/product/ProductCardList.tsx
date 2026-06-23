@@ -1,6 +1,9 @@
 'use client'
 import ProductCard from "./ProductCard"
 import { deleteProduct} from "@/lib/data/Products"
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Modal, Button, Card } from '@/ui';
 
 type ProductImage = {
   id: string;
@@ -25,11 +28,28 @@ type productProps = {
 }
 
 export default function ProductCardList({products}: productProps) {
+  const router = useRouter();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleOnDelete = (id: string) => {
+    setSelectedId(id)
+    setIsModalOpen(true);
+  }
+
+  const onClose = () => {
+    setIsModalOpen(false);
+  }
 
   const handleDelete = async (id: string) => {
     try {
       await deleteProduct(id);
+      
+      setSelectedId(null);
+      setIsModalOpen(false);
+
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
@@ -44,9 +64,33 @@ export default function ProductCardList({products}: productProps) {
           product={product}
           editLink={`products/${product.id}/edit`}
           detailsLink={`products/${product.id}`}
-          onDelete={handleDelete}
+          onDelete={handleOnDelete}
         />
       ))}
+
+      {
+        isModalOpen && (
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          >
+            <Card className="flex flex-col justify-center items-center p-6 gap-4 w-full max-w-md">
+              <p className='text-content'>Are you sure you want to delete this product!</p>
+
+              <section className="flex justify-center items-center gap-6">
+                <Button 
+                  variant="danger"
+                  onClick={() => handleDelete(selectedId!)}
+                >
+                  Delete
+                </Button>
+
+                <Button onClick={onClose} variant="secondary">Cancel</Button>
+              </section>
+            </Card>
+          </Modal>
+        )
+      } 
     </>
   )
 

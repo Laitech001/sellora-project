@@ -6,6 +6,9 @@ import { EditProductForm } from "@/components/dashboard/product";
     id: string;
   }
  }
+
+ export const dynamic = "force-dynamic";
+
  export default async function EditProductPage({ params }: PageProps) {
   const { id } = await params;
 
