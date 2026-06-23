@@ -63,7 +63,7 @@ export default function MenuButton({ store }: menuButtonProps) {
       {menuOpen && (
         <>
           <div 
-            className="fixed inset-0 bg-black/40 z-40"
+            className="fixed inset-0 bg-black/40 z-40 overflow-y-auto"
             onClick={() => setMenuOpen(false)}
           />
 
