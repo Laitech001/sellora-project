@@ -54,7 +54,7 @@ export default function DashboardActions({
         <span className="hidden sm:inline">Delete</span>
       </button>
 
-      {hasOverflowActions && (
+      {/* {hasOverflowActions && (
         <div className="relative" ref={menuRef}>
           <button
             type="button"
@@ -110,7 +110,7 @@ export default function DashboardActions({
             </div>
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default async function Dashboard() {
     user_id: string;
     name: string;
     slug: string;
-    phone_number: string;
+    whatsapp_number: string;
     business_type: string;
     address: string | null;
     created_at: string;

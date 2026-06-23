@@ -3,11 +3,12 @@ import { DashboardProductPage } from '@/components/dashboard/product'
 type Props = {
   params: {
     id: string;
+    slug: string;
   }
 }
 
 export default async function ProductDetails({ params }: Props) {
-  const { id } = await params;
+  const { id, slug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const res = await fetch(`${baseUrl}/api/products/${id}`, {
@@ -24,7 +25,7 @@ export default async function ProductDetails({ params }: Props) {
     <>
       {/* <ProductDetailsCard product={product}/> */}
 
-      <DashboardProductPage product={product}/>
+      <DashboardProductPage product={product} slug={slug}/>
     </>
   )
 }

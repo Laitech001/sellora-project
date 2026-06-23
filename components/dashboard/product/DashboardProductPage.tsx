@@ -7,11 +7,13 @@ import DashboardAction from "@/components/product-details/DashboardAction";
 // Same shell, same ProductInfo, same ProductImageGallery as the storefront
 // page — the only difference is which actions component gets passed in,
 // and what each button actually does.
-export default function DashboardProductPage({ product }: { product: Product }) {
+export default function DashboardProductPage({ product, slug }: { product: Product; slug: string }) {
   const router = useRouter();
 
+  console.log(slug);
+
   const handleEdit = () => {
-    router.push(`/dashboard/products/${product.id}/edit`);
+    router.push(`/dashboard/${slug}/products/${product.id}/edit`);
   };
 
   const handleDelete = async () => {

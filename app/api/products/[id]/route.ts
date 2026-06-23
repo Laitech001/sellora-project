@@ -1,9 +1,9 @@
 import { supabase } from "@/lib/supabase";
 
 type Params = {
-  params: {
+  params: Promise<{
     id: string;
-  }
+  }>
 }
 
 type ParamsProps = {
