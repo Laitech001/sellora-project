@@ -80,9 +80,9 @@ export async function DELETE(request: Request, context: ParamsProps) {
     if (orderItems && orderItems.length > 0) {
       return Response.json(
         { success: false,
-          message: 'Cannot delete product, it is refrenced in existing order'
+          message: "This product cannot be deleted because it has existing orders."
         },
-        { status: 409 },
+        { status: 400 },
       )
     }
 

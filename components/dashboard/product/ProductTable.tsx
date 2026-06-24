@@ -4,6 +4,7 @@ import ProductRow from "./ProductRow";
 import { useState } from 'react'
 import { deleteProduct } from "@/lib/data/Products";
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 type ProductImage = {
   id: string;
@@ -50,7 +51,13 @@ export default function ProductTable({ products }: ProductProps) {
       setSelectedId(null);
       router.refresh();
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete product"
+      );
+    } finally {
+      setIsModalOpen(false);
     }
   }
 

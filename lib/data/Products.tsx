@@ -79,17 +79,16 @@ export async function getProductsBySlug(slug: string): Promise<Product[]> {
 
 
 export const deleteProduct = async (id: string) => {
-  try {
-    const res = await fetch(`${baseUrl}/api/products/${id}`, {
-      method: 'DELETE'
-    });
+  
+  const res = await fetch(`${baseUrl}/api/products/${id}`, {
+    method: 'DELETE'
+  });
 
-    if (!res.ok) {
-      console.error('Failed to delete product')
-    }
-    
-  } catch (error) {
-    console.error('Failed to delete product');
-    throw error;
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error);
   }
+
+  return data;
 }
