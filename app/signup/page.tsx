@@ -33,9 +33,9 @@ export default function SignUp() {
         <BrandLogoName />
       </header>
       
-      <section className='flex items-start justify-center lg:justify-evenly lg:gap-6'>
+      <section className='flex items-center justify-center lg:justify-evenly lg:gap-6'>
 
-        <section className='hidden max-h-screen text-white lg:flex flex-col gap-6 p-4 py-8'>
+        <section className='hidden max-h-screen text-white lg:flex flex-col gap-6 p-4'>
 
           <div>
             <h1 className='mb-2 lg:text-3xl font-bold tracking-tight'>Take Control of Your Business Online</h1>

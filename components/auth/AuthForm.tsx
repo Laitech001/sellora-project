@@ -163,7 +163,7 @@ export default function Authform() {
         </p>
       </div>
 
-      <div className="flex-1 flex justify-center items-center px-4 sm:py-8">
+      <div className="flex-1 flex justify-center items-center px-4 py-8">
         <div className="w-full max-w-md bg-card border border-border-soft font-semibold shadow-xl shadow-black/20 p-6 sm:px-8 sm:py-10 rounded-2xl">
 
           <div className="flex justify-center items-center mb-6">
