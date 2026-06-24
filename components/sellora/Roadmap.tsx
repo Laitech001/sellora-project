@@ -16,7 +16,7 @@ const roadmap = [
     status: "planned",
     title: "Grow & get paid faster",
     items: [
-      "Same-day payouts",
+      "Same day payouts",
       "Discount codes & bundle pricing",
       "WhatsApp order notifications",
     ],
@@ -67,14 +67,14 @@ const statusConfig = {
 export default function Roadmap() {
   return (
     <section id="roadmap" className="px-12 py-20 max-sm:px-5">
-      <p className="text-center text-[11px] tracking-[0.12em] text-txt-secondary uppercase mb-2.5">
+      <p className="text-center text-[11px] tracking-[0.12em] text-text-secondary uppercase mb-2.5">
         What's next
       </p>
       <h2 className="text-center text-[clamp(26px,3vw,36px)] font-bold font-display text-white tracking-[-0.02em] mb-2">
         Built in public, shaped by you
       </h2>
       <p className="text-center text-[15px] text-text-secondary max-w-115 mx-auto mb-16 leading-[1.7]">
-        We're just getting started. Here's where Sellora is headed — and
+        We're just getting started. Here's where Sellora is headed and
         early store owners help decide what comes next.
       </p>
 

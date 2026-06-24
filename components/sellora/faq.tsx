@@ -6,11 +6,11 @@ import { ChevronDown, ShieldCheck } from "lucide-react";
 const faqs = [
   {
     q: "Do I need a website?",
-    a: "No. Sellora gives you a ready-made storefront the moment you sign up — no domain, hosting, or web developer required. Just add your products and share your store link.",
+    a: "No. Sellora gives you a ready-made storefront the moment you sign up. No domain, hosting, or web developer required. Just add your products and share your store link.",
   },
   {
     q: "How do customers place orders?",
-    a: "Customers visit your Sellora store link, browse your products, and check out directly — no app download or account creation needed on their end. Every order lands straight in your dashboard.",
+    a: "Customers visit your Sellora store link, browse your products, and check out directly. No app download or account creation needed on their end. Every order lands straight in your dashboard.",
   },
   {
     q: "Do I need technical skills?",
@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "What if I get stuck or have a question?",
-    a: "Our support team is reachable directly from your dashboard. Since we're early, you'll be talking to real people building the product — not a ticket queue.",
+    a: "Our support team is reachable directly from your dashboard. Since we're early, you'll be talking to real people building the product not a ticket queue.",
   },
 ];
 

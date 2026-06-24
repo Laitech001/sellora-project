@@ -14,7 +14,7 @@ const stats = [
 
 const orders = [
   {
-    name: "iPhone 13 — 128GB",
+    name: "iPhone 13 128GB",
     id: "#1042",
     amount: "₦185,000",
     status: "Fulfilled",

@@ -9,7 +9,7 @@ const steps = [
   },
   {
     title: "Start selling and watch it grow",
-    desc: "Share your store link anywhere — WhatsApp, Instagram, or direct. Every sale, order, and customer tracked automatically.",
+    desc: "Share your store link on WhatsApp, Instagram, or direct. Every sale, order, and customer tracked automatically.",
   },
 ];
 

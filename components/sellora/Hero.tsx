@@ -29,7 +29,7 @@ export default function Hero() {
 
         {/* Subtext */}
         <p className="text-[17px] text-text-secondary max-w-115 mx-auto mb-9 leading-[1.75]">
-          Sellora gives you everything you need to sell online — track orders,
+          Sellora gives you everything you need to sell online, track orders,
           manage products, collect payments, and watch your business grow in real
           time.
         </p>
@@ -51,7 +51,7 @@ export default function Hero() {
         {/* Note */}
         <p className="mt-3.5 text-xs text-white/30 flex items-center justify-center gap-1.5">
           <ShieldCheck size={16} className="text-primary-600" />
-          No credit card required — free to start
+          No credit card required free to start
         </p>
       </div>
     </section>

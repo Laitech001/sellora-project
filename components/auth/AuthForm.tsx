@@ -149,21 +149,21 @@ export default function Authform() {
   return (
     <div className="min-h-screen bg-dark flex flex-col">
 
-      {/* Mobile-only intro — gives context above the form on small screens */}
+      {/* Mobile-only intro gives context above the form on small screens */}
       <div className="lg:hidden px-6 pt-10 pb-2 text-center">
         <div className="inline-flex items-center gap-1.5 bg-[rgba(124,58,237,0.15)] text-primary-300 border border-[rgba(124,58,237,0.28)] rounded-full px-3 py-1 text-[11px] font-medium mb-4">
           <Sparkles size={12} />
-          Free to start — no card required
+          Free to start. No card required
         </div>
         <h2 className="text-xl font-bold font-display text-white leading-snug mb-2">
           Take control of your<br />business online
         </h2>
         <p className="text-sm text-text-secondary leading-relaxed max-w-xs mx-auto">
-          Create your store, manage products, and track orders — all from one dashboard.
+          Create your store, manage products, and track orders. All from one dashboard.
         </p>
       </div>
 
-      <div className="flex-1 flex justify-center items-center px-4 py-8 lg:py-16">
+      <div className="flex-1 flex justify-center items-center px-4 sm:py-8">
         <div className="w-full max-w-md bg-card border border-border-soft font-semibold shadow-xl shadow-black/20 p-6 sm:px-8 sm:py-10 rounded-2xl">
 
           <div className="flex justify-center items-center mb-6">
@@ -405,7 +405,7 @@ export default function Authform() {
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
                 <ShieldCheck size={13} className="text-primary-400" />
-                Secure login — your data stays private
+                Built with security and reliability at its core.
               </p>
             </Form>
           )}

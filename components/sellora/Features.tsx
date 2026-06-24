@@ -37,7 +37,7 @@ const features = [
   {
     icon: Store,
     title: "Your own storefront",
-    desc: "A public store link customers can browse and buy from — no developer needed.",
+    desc: "A public store link customers can browse and buy from no developer needed.",
   },
 ];
 
@@ -55,7 +55,7 @@ export default function Features() {
         whole operation in one place.
       </p>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 max-w-215 mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-215 mx-auto">
         {features.map((f) => (
           <div
             key={f.title}
