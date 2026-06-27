@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
 import { Mail, User, Eye, EyeOff, ShieldCheck, Sparkles } from "lucide-react";
-import { Form, TextInput, Label, Button } from '@/ui';
+import { Form, TextInput, Label, Button, GoogleIcon} from '@/ui';
 import { supabase } from "@/lib/supabase";
 import { BrandLogoName } from "@/ui/Brand";
 
@@ -139,6 +139,16 @@ export default function Authform() {
     }
   }
 
+  // handle login with google
+  const handleGoogleSignin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+       options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
+
   // clear error when user switch between tabs
   const handleTabSwitch = (tab: "signup" | "login") => {
     setActiveTab(tab);
@@ -215,29 +225,6 @@ export default function Authform() {
               </div>
 
               <div className="relative">
-                <Label 
-                  htmlFor="username"
-                  className="text-content text-sm font-medium mb-1.5 block"
-                >
-                  Username <span className="text-xs text-text-secondary font-normal">(optional)</span>
-                </Label>
-
-                <div className="relative">
-                  <User className="absolute left-3 top-2.5  text-text-secondary pointer-events-none" size={17} />
-                  <TextInput
-                    id='username'
-                    name="username"
-                    value={signupData.username}
-                    onChange={(e) => handleChange(e, "signup")}
-                    placeholder='Enter your username'
-                    radius="medium"
-                    className="pl-10 bg-circle-background border-border-soft text-content placeholder:text-text-secondary/60 focus:border-primary-500"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="relative">
                 <Label htmlFor="email" className="text-content text-sm font-medium mb-1.5 block">
                   Email <span className="text-xs text-text-secondary font-normal">(required)</span>
                 </Label>
@@ -306,10 +293,26 @@ export default function Authform() {
                 type='submit' 
                 variant="gradient"
                 disabled={loading}
-                className='w-full rounded-full mt-2 bg-linear-to-r from-primary-600 to-accent-600 text-white font-medium py-2.5 hover:opacity-90 active:scale-[0.98] transition-all duration-200'
+                className='w-full rounded-full mt-1 bg-linear-to-r from-primary-600 to-accent-600 text-white font-medium py-2.5 hover:opacity-90 active:scale-[0.98] transition-all duration-200'
               >
                 {loading ? 'Creating Account...' : 'Sign Up'}
               </Button>
+
+              <div>
+                <Button
+                  onClick={handleGoogleSignin}
+                  variant="secondary"
+                  className="w-full rounded-full flex justify-center items-center"
+                >
+                  <div className="flex items-center gap-2">
+                    <GoogleIcon />
+                    <span>
+                      continue with Google
+                    </span>
+                  </div>
+                  
+                </Button>
+              </div>
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
                 <ShieldCheck size={13} className="text-primary-400" />
@@ -330,6 +333,8 @@ export default function Authform() {
                   Log in to manage your store and track your business.
                 </p>
               </div>
+
+
             
               <div className="relative">
                 <Label 
@@ -398,10 +403,26 @@ export default function Authform() {
                 type='submit'
                 variant="gradient" 
                 disabled={loading}
-                className='w-full rounded-full mt-2 bg-linear-to-r from-primary-600 to-accent-600 text-white font-medium py-2.5 hover:opacity-90 active:scale-[0.98] transition-all duration-200'
+                className='w-full rounded-full mt-1 bg-linear-to-r from-primary-600 to-accent-600 text-white font-medium py-2.5 hover:opacity-90 active:scale-[0.98] transition-all duration-200'
               >
                 {loading ? 'Loging in...' : 'Log In'}
               </Button>
+
+              <div>
+                <Button
+                  onClick={handleGoogleSignin}
+                  variant="secondary"
+                  className="w-full rounded-full flex justify-center items-center"
+                >
+                  <div className="flex items-center gap-2">
+                    <GoogleIcon />
+                    <span>
+                      Continue with Google
+                    </span>
+                  </div>
+                  
+                </Button>
+              </div>
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
                 <ShieldCheck size={13} className="text-primary-400" />

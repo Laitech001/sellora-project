@@ -1,4 +1,3 @@
-
 export { default as Form } from './Form'
 export { default as TextInput } from './TextInput'
 export { default as Button } from './Button'
@@ -11,3 +10,4 @@ export { default as LoadingSpinner } from './LoadingSpinner'
 export { default as ErrorState } from './ErrorState'
 export { default as Logo } from './Brand'
 export { default as FloatingButton } from './FloatingButton'
+export { default as GoogleIcon } from './GoogleIcon'
