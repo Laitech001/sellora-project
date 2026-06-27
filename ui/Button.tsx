@@ -34,7 +34,12 @@ export default function Button({ children, onClick, variant = 'primary', size = 
   : "hover:opacity-90";
 
   return (
-    <button onClick={onClick} className={`${baseClasses} ${disabledClasses}`} disabled={isDisabled}>
+    <button 
+      type={type}
+      onClick={onClick} 
+      className={`${baseClasses} ${disabledClasses}`} 
+      disabled={isDisabled}
+    >
       {loading && (
         <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
       )}

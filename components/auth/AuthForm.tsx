@@ -6,6 +6,7 @@ import { Mail, User, Eye, EyeOff, ShieldCheck, Sparkles } from "lucide-react";
 import { Form, TextInput, Label, Button, GoogleIcon} from '@/ui';
 import { supabase } from "@/lib/supabase";
 import { BrandLogoName } from "@/ui/Brand";
+import { sign } from "crypto";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Authform() {
@@ -47,6 +48,22 @@ export default function Authform() {
     }
   };
 
+  // validate signup form
+  const validateSignupForm = () => {
+    if (!signupData.email || !signupData.password) {
+      alert("Email and password required");
+      return false;
+    }
+  }
+
+  // validate Login form
+  const validateLoginForm = () => {
+    if (!loginData.email || !loginData.password) {
+      alert("Email and password required");
+      return false;
+    }
+  }
+ 
   // handle auth form submition
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,11 +73,7 @@ export default function Authform() {
     const username = signupData.username
 
     try {
-        if (!signupData.email || !signupData.password || !signupData.username) {
-        setLoading(false);
-        return alert('Please fill all the field');
-      }
-      console.log(signupData);
+      validateSignupForm();
 
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -102,10 +115,7 @@ export default function Authform() {
     setLoading(true);
 
     try {
-      if (!loginData.email || !loginData.password) {
-        setLoading(false);
-        return alert('Please fill all the field')
-      }
+      validateLoginForm();
 
       const { data, error: loginError} = await supabase.auth.signInWithPassword({
         email: loginData.email,
