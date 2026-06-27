@@ -176,10 +176,6 @@ export default function Authform() {
       <div className="flex-1 flex justify-center items-center px-4 py-8">
         <div className="w-full max-w-md bg-card border border-border-soft font-semibold shadow-xl shadow-black/20 p-6 sm:px-8 sm:py-10 rounded-2xl">
 
-          <div className="flex justify-center items-center mb-6">
-            <BrandLogoName />
-          </div>
-
           <div className="relative flex items-center w-full rounded-full bg-circle-background p-1 mb-6">
 
             {/* Sliding pill — sits behind buttons */}
@@ -217,11 +213,25 @@ export default function Authform() {
               onSubmit={handleSignup} 
               className='animate-slide-in duration-300 border-none shadow-none space-y-4'
             >
-              
-              <div className="space-y-1 mb-2 flex flex-col items-center text-center">
-                <h1 className="text-content text-lg md:text-xl font-semibold font-display">Start selling in minutes</h1>
 
-                <p className="text-text-secondary text-sm font-normal">Create your free account and set up your store today.</p>
+              <div>
+                <Button
+                  onClick={handleGoogleSignin}
+                  variant="secondary"
+                  className="w-full rounded-full flex justify-center items-center"
+                >
+                  <div className="flex items-center gap-2">
+                    <GoogleIcon />
+                    <span>
+                      continue with Google
+                    </span>
+                  </div>
+                  
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <p className="text-sm text-text-secondary">or</p>
               </div>
 
               <div className="relative">
@@ -298,6 +308,20 @@ export default function Authform() {
                 {loading ? 'Creating Account...' : 'Sign Up'}
               </Button>
 
+              <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
+                <ShieldCheck size={13} className="text-primary-400" />
+                Your data is encrypted and secure
+              </p>
+            </Form>
+          )}
+
+          {/* Login section */}
+          {activeTab === 'login' && (
+            <Form
+              onSubmit={handleLogin} 
+              className='animate-slide-in duration-300 border-none shadow-none space-y-4'
+            >
+
               <div>
                 <Button
                   onClick={handleGoogleSignin}
@@ -314,27 +338,9 @@ export default function Authform() {
                 </Button>
               </div>
 
-              <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
-                <ShieldCheck size={13} className="text-primary-400" />
-                Your data is encrypted and secure
-              </p>
-            </Form>
-          )}
-
-          {/* Login section */}
-          {activeTab === 'login' && (
-            <Form
-              onSubmit={handleLogin} 
-              className='animate-slide-in duration-300 border-none shadow-none space-y-4'
-            >
-              <div className="space-y-1 mb-2 flex flex-col items-center text-center">
-                <h1 className="text-content text-lg md:text-xl font-semibold font-display">Welcome Back</h1>
-                <p className="text-text-secondary text-sm font-normal">
-                  Log in to manage your store and track your business.
-                </p>
+              <div className="flex items-center justify-center">
+                <p className="text-sm text-text-secondary">or</p>
               </div>
-
-
             
               <div className="relative">
                 <Label 
@@ -407,22 +413,6 @@ export default function Authform() {
               >
                 {loading ? 'Loging in...' : 'Log In'}
               </Button>
-
-              <div>
-                <Button
-                  onClick={handleGoogleSignin}
-                  variant="secondary"
-                  className="w-full rounded-full flex justify-center items-center"
-                >
-                  <div className="flex items-center gap-2">
-                    <GoogleIcon />
-                    <span>
-                      Continue with Google
-                    </span>
-                  </div>
-                  
-                </Button>
-              </div>
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-text-secondary mt-3">
                 <ShieldCheck size={13} className="text-primary-400" />

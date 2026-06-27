@@ -31,6 +31,7 @@ type ProductProps = {
 export default function ProductTable({ products }: ProductProps) {
   const router = useRouter();
   
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -45,6 +46,9 @@ export default function ProductTable({ products }: ProductProps) {
 
 
   const handleDelete = async (id: string) => {
+
+    setIsLoading(true);
+
     try {
       await deleteProduct(id);
       setIsModalOpen(false);
@@ -58,6 +62,7 @@ export default function ProductTable({ products }: ProductProps) {
       );
     } finally {
       setIsModalOpen(false);
+      setIsLoading(false);
     }
   }
 
@@ -100,7 +105,7 @@ export default function ProductTable({ products }: ProductProps) {
                   variant="danger"
                   onClick={() => handleDelete(selectedId!)}
                 >
-                  Delete
+                  {isLoading ? 'Deleting' : 'Delete'}
                 </Button>
 
                 <Button onClick={onClose} variant="secondary">Cancel</Button>

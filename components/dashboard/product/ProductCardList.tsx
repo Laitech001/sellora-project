@@ -30,6 +30,7 @@ type productProps = {
 export default function ProductCardList({products}: productProps) {
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -43,6 +44,7 @@ export default function ProductCardList({products}: productProps) {
   }
 
   const handleDelete = async (id: string) => {
+    setIsLoading(true);
     try {
       await deleteProduct(id);
       
@@ -52,6 +54,8 @@ export default function ProductCardList({products}: productProps) {
       router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -82,7 +86,7 @@ export default function ProductCardList({products}: productProps) {
                   variant="danger"
                   onClick={() => handleDelete(selectedId!)}
                 >
-                  Delete
+                  {isLoading ? 'Deleting' : 'Delete'}
                 </Button>
 
                 <Button onClick={onClose} variant="secondary">Cancel</Button>
