@@ -2,7 +2,7 @@ import { getOrdersBySlug, getRecentOrders } from "@/lib/data/Orders";
 import { getstats } from "@/lib/data/Stats"
 import DashboardStatsCard from "../../../components/dashboard/others/DashboardStatsCard"
 import Saleschart from "../../../components/dashboard/others/Saleschart"
-import { OrderCard, OrderCardList, OrderTable} from '@/components/dashboard/order'
+import { OrderCardList, OrderTable} from '@/components/dashboard/order'
 import Link from "next/link";
 import { Card } from '@/ui';
 import { Package, ShoppingCart, DollarSign, Clock} from 'lucide-react'

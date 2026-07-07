@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase';
+import { createClient } from "@/lib/supabaseServer";
+import { NextResponse } from "next/server";
 
 type OrderPrice = {
   total_price: number;
@@ -12,6 +13,17 @@ type ParamsProps = {
 
 export async function GET(req: Request, context: ParamsProps) {
   const { slug } = await context.params;
+  const supabase = await createClient();
+
+  // Get the logged in user server-side
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   if (!slug) {
     return Response.json(

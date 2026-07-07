@@ -38,10 +38,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/signup", request.url));
   }
 
-  // IMPORTANT: return supabaseResponse, NOT NextResponse.next()
+  // return supabaseResponse, NOT NextResponse.next()
   return supabaseResponse;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/api/:path*",
+  ],
 };

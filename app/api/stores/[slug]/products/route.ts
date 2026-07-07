@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase';
+import { createClient } from "@/lib/supabaseServer";
+import { NextResponse } from "next/server";
 
 type ParamsProps = {
   params: Promise<{
@@ -8,24 +9,43 @@ type ParamsProps = {
 
 export async function GET(req: Request, context: ParamsProps) {
   const { slug } = await context.params;
+  const supabase = await createClient();
+
+  // Get the logged in user server-side
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   if (!slug) {
-    return Response.json({ error: 'Missing store slug' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
   }
 
   try {
+    // get store data
     const { data: storeData, error: storeError } = await supabase
       .from('stores')
-      .select('id, name, slug')
+      .select('*')
       .eq('slug', slug)
       .single();
 
+    // handle case where there is an error fetching store data
     if (storeError) {
-      return Response.json({ error: storeError.message }, { status: 500 });
+      return NextResponse.json({ error: storeError.message }, { status: 500 });
     }
 
+    // handle case where store is not found
     if (!storeData) {
-      return Response.json({ error: 'Store not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Store not found' }, { status: 404 });
+    }
+
+    // check if the logged-in user is the owner of the store
+    if (storeData.user_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const { data: productsData, error: productsError } = await supabase
@@ -36,16 +56,16 @@ export async function GET(req: Request, context: ParamsProps) {
 
     if (productsError) {
       console.error('Products error:', productsError);
-      return Response.json(
+      return NextResponse.json(
         { error: productsError.message ?? 'Failed to fetch products' },
         { status: 500 }
       );
     }
 
-    return Response.json({ store: storeData, products: productsData });
+    return NextResponse.json({ store: storeData, products: productsData });
   } catch (error) {
     console.error('Unexpected error:', error);
-    return Response.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 }
 
@@ -58,6 +78,17 @@ export async function GET(req: Request, context: ParamsProps) {
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
+    const supabase = await createClient();
+
+  // Get the logged in user server-side
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
     const name = formData.get('name') as string;
     const price = formData.get('price') as string;

@@ -54,9 +54,6 @@ export async function getProductsBySlug(slug: string): Promise<Product[]> {
   try {
     const res = await fetch(`${baseUrl}/api/stores/${slug}/products`);
 
-    console.log(`Fetching products for store slug: ${slug}`);
-    console.log('Fetch response:', res);
-
     if (!res.ok) {
       let message = 'Failed to fetch products';
 

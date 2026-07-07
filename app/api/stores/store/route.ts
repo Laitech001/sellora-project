@@ -43,7 +43,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Supabase insert error:', error);
+      if (error.code === "23505") {
+        return NextResponse.json(
+          { error: "Store slug already exists. Choose another one." },
+          { status: 409 }
+        );
+      }
+
       return NextResponse.json(
         { error: error.message },
         { status: 500 }

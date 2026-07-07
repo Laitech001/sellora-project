@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { createClient } from "@/lib/supabaseServer"
 
 type Store = {
   id: string
@@ -11,6 +11,8 @@ type Store = {
 }
 
 export async function getStoreBySlug( slug: string): Promise<Store | null> {
+
+  const supabase = await createClient();
   
   try {
     const { data, error } = await supabase

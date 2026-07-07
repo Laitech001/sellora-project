@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabase } from "@/lib/supabase";
 
 type Order = {
   id: string;
@@ -14,6 +14,7 @@ type Order = {
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function getRecentOrders(slug: string): Promise<Order[]> {
+
   try {
     const { data: storeData, error: storeError } = await supabase
       .from('stores')
@@ -55,6 +56,7 @@ export async function getRecentOrders(slug: string): Promise<Order[]> {
 
 export async function getOrders(): Promise<Order[]> {
   const fetchOrder = async () => {
+
     try {
       const res = await fetch(`${baseUrl}/api/orders`, {
         method: 'GET',
@@ -101,6 +103,7 @@ export async function getOrdersBySlug(slug: string): Promise<Order[]> {
 
     const data = await res.json();
     return data.orders;
+    
   } catch (error) {
     console.error('Failed to fetch orders by store ID:', error);
     return [];
@@ -108,6 +111,7 @@ export async function getOrdersBySlug(slug: string): Promise<Order[]> {
 }
 
 export async function getOrderItems(orderId: string) {
+  
   try {
     const { data, error } = await supabase
       .from('order_items')
@@ -127,6 +131,7 @@ export async function getOrderItems(orderId: string) {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
+
   try {
     const { error } = await supabase
       .from('orders')

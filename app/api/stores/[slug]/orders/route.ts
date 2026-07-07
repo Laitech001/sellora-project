@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase';
+import { NextResponse } from "next/server";
+import { createClient } from '@/lib/supabaseServer';
 
 type ParamaProps = {
   params: Promise<{
@@ -6,11 +7,22 @@ type ParamaProps = {
   }>
 }
 
-export async function GET(req: Request, contect: ParamaProps) {
-  const { slug } = await contect.params;
+export async function GET(req: Request, context: ParamaProps) {
+  const { slug } = await context.params;
+  const supabase = await createClient();
+
+  // get logged in user server-side
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+if (userError || !user) {
+  return NextResponse.json(
+    { error: "Unauthorized" }, 
+    { status: 401 }
+  );
+}
 
   if (!slug) {
-    return Response.json({ error: 'Missing store slug' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
   }
 
   try {
@@ -23,12 +35,17 @@ export async function GET(req: Request, contect: ParamaProps) {
 
     // handle case where there is an error fetching store data
     if (storeError) {
-      return Response.json({ error: 'Failed to fetch store data' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to fetch store data' }, { status: 500 });
     }
 
-    //handle case where store is not found
+    // handle case where store is not found
     if (!storeData) {
-      return Response.json({ error: 'Store not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Store not found' }, { status: 404 });
+    }
+
+    // check if the logged-in user is the owner of the store
+    if (storeData.user_id !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // get orders for the store
@@ -38,11 +55,11 @@ export async function GET(req: Request, contect: ParamaProps) {
       .eq('store_id', storeData.id);
 
     if (ordersError) {
-      return Response.json({ error: 'Failed to fetch orders' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
     }
 
-    return Response.json({ store: storeData, orders: ordersData });
+    return NextResponse.json({ store: storeData, orders: ordersData });
   } catch (error) {
-    return Response.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
   }
 }

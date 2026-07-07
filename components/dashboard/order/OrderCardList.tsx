@@ -21,13 +21,13 @@ type orderProps = {
 
 type OrderItemsProps = {
   id: string;
-    order_id: string;
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    product_price: number;
-    subtotal: number;
-    product_image: string;
+  order_id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  product_price: number;
+  subtotal: number;
+  product_image: string;
 };
 
 type SelectedOrderProps = {

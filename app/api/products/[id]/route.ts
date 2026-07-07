@@ -1,4 +1,6 @@
 import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabaseServer";
+import { NextResponse } from "next/server";
 
 type Params = {
   params: Promise<{
@@ -15,6 +17,17 @@ type ParamsProps = {
 export async function GET(request: Request, { params }: Params) {
   try {
     const { id } = await params;
+    const supabase = await createClient();
+  
+    // Get the logged in user server-side
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
 
     const { data, error } = await supabase
       .from('products')
@@ -43,6 +56,17 @@ export async function DELETE(request: Request, context: ParamsProps) {
   try {
     // Await params first
     const { id } = await context.params;
+    const supabase = await createClient();
+  
+  // Get the logged in user server-side
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
 
     // Now check id (not params.id)
     if (!id) {
@@ -163,6 +187,17 @@ const MAX_IMAGES = 4;
 // ============================================================
 export async function PATCH(request: Request, context: ParamsProps) {
   const { id } = await context.params;
+  const supabase = await createClient();
+  
+  // Get the logged in user server-side
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   if (!id) {
     return Response.json({ error: 'Missing product id' }, { status: 400 });
