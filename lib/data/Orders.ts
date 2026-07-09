@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabaseServer";
 
 type Order = {
   id: string;
@@ -14,6 +15,14 @@ type Order = {
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function getRecentOrders(slug: string): Promise<Order[]> {
+  const supabase = await createClient();
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    console.error('Unauthorized access to fetch recent orders');
+    return [];
+  }
 
   try {
     const { data: storeData, error: storeError } = await supabase
@@ -106,26 +115,6 @@ export async function getOrdersBySlug(slug: string): Promise<Order[]> {
     
   } catch (error) {
     console.error('Failed to fetch orders by store ID:', error);
-    return [];
-  }
-}
-
-export async function getOrderItems(orderId: string) {
-  
-  try {
-    const { data, error } = await supabase
-      .from('order_items')
-      .select('*')
-      .eq('order_id', orderId);
-
-    if (error) {
-      console.error('Failed to fetch order items:', error);
-      return [];
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Failed to fetch order items:', error);
     return [];
   }
 }

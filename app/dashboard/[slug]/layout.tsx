@@ -14,8 +14,6 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
   const { slug } = await params;
   const store = await getStoreBySlug(slug);
 
-  console.log(slug);
-
   if (!store) {
     notFound();
   }

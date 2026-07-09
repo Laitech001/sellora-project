@@ -11,15 +11,17 @@ export async function GET(req: Request, context: ParamaProps) {
   const { slug } = await context.params;
   const supabase = await createClient();
 
+  console.log('GET request received for orders with slug:', slug);
+
   // get logged in user server-side
   const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-if (userError || !user) {
-  return NextResponse.json(
-    { error: "Unauthorized" }, 
-    { status: 401 }
-  );
-}
+  if (userError || !user) {
+    return NextResponse.json(
+      { error: "Unauthorized" }, 
+      { status: 401 }
+    );
+  }
 
   if (!slug) {
     return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
@@ -41,6 +43,10 @@ if (userError || !user) {
     // handle case where store is not found
     if (!storeData) {
       return NextResponse.json({ error: 'Store not found' }, { status: 404 });
+    }
+
+    if (storeData) {
+      console.log('Store data:', storeData);
     }
 
     // check if the logged-in user is the owner of the store

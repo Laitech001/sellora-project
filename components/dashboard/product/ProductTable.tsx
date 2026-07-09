@@ -2,7 +2,6 @@
 import { Table, Modal, Button, Card } from "@/ui";
 import ProductRow from "./ProductRow";
 import { useState } from 'react'
-import { deleteProduct } from "@/lib/data/Products";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -28,7 +27,7 @@ type ProductProps = {
   }[]
 };
 
-export default function ProductTable({ products }: ProductProps) {
+export default function ProductTable({ products, slug }: ProductProps & { slug: string }) {
   const router = useRouter();
   
   const [isLoading, setIsLoading] = useState(false);
@@ -50,10 +49,19 @@ export default function ProductTable({ products }: ProductProps) {
     setIsLoading(true);
 
     try {
-      await deleteProduct(id);
+      const res = await fetch(`/api/stores/${slug}/products/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to delete product');
+      }
+
       setIsModalOpen(false);
       setSelectedId(null);
       router.refresh();
+      toast.success('Product deleted successfully');
     } catch (error) {
       toast.error(
         error instanceof Error

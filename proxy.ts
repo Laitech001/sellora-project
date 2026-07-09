@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Use getClaims() not getUser() — it's the new recommended way in Next.js 16
+  // Use getClaims() not getUser() it's the new recommended way in Next.js 16
   await supabase.auth.getClaims();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -44,7 +44,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/api/:path*",
+    "/dashboard/:path*"
   ],
 };

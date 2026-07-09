@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+
 type ProductImage = {
   id: string;
   product_id: string;
@@ -50,9 +52,15 @@ export async function getProductsBySlug(slug: string): Promise<Product[]> {
   if (!baseUrl) {
     throw new Error('NEXT_PUBLIC_BASE_URL is not defined');
   }
+
+  const cookieStore = await cookies();
   
   try {
-    const res = await fetch(`${baseUrl}/api/stores/${slug}/products`);
+    const res = await fetch(`${baseUrl}/api/stores/${slug}/products`, {
+      headers: {
+        cookie: cookieStore.toString()
+      }
+    });
 
     if (!res.ok) {
       let message = 'Failed to fetch products';
@@ -72,20 +80,4 @@ export async function getProductsBySlug(slug: string): Promise<Product[]> {
     console.error('Error fetching products:', error);
     throw error;
   }  
-}
-
-
-export const deleteProduct = async (id: string) => {
-  
-  const res = await fetch(`${baseUrl}/api/products/${id}`, {
-    method: 'DELETE'
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new Error(data.error);
-  }
-
-  return data;
 }

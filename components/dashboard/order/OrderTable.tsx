@@ -5,7 +5,6 @@ import { OrderRow } from '@/components/dashboard/order'
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { OrderDetailsModal } from '@/components/dashboard/order'
-import { getOrderItems } from '@/lib/data/Orders';
 
 type orderProps = {
   orders: {
@@ -43,7 +42,8 @@ type SelectedOrderProps = {
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-export default function OrderTable({ orders }: orderProps) {
+export default function OrderTable({ orders, slug }: orderProps & { slug: string }) {
+
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -61,8 +61,13 @@ export default function OrderTable({ orders }: orderProps) {
   useEffect(() => {
     const fetchOrderItems = async () => {
       if (selectedOrder?.id) {
-        const items = await getOrderItems(selectedOrder.id);
-        setOrderItems(items);
+        const res = await fetch(`/api/stores/${slug}/orders/${selectedOrder.id}/items`);
+        if (res.ok) {
+          const data = await res.json();
+          setOrderItems(data.items);
+        } else {
+          console.error('Failed to fetch order items');
+        }
       }
     };
 
@@ -101,6 +106,7 @@ export default function OrderTable({ orders }: orderProps) {
         customerNumber={selectedOrder?.customer_number}
         orderTotalPrice={selectedOrder?.total_price}
         orderDate={selectedOrder?.created_at}
+        slug={slug}
       />
     </>
     

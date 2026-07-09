@@ -69,3 +69,44 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET(request: NextRequest) {
+  const supabase = await createClient();
+
+  // Get the logged in user server-side
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (!user || authError) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
+
+  try {
+    // Fetch stores for the logged-in user
+    const { data: stores, error: storesError } = await supabase
+      .from('stores')
+      .select('*')
+      .eq('user_id', user.id);
+
+    if (storesError) {
+      return NextResponse.json(
+        { error: storesError.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { stores },
+      { status: 200 }
+    );
+    
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

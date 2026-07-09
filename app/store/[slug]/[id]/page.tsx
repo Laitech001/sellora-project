@@ -16,7 +16,7 @@ export default async function StorefrontProductDetails({ params }: Props) {
   const store = await getStoreBySlug(slug);
 
   if (!store) {
-    notFound();
+    return;
   }
 
   console.log(slug);

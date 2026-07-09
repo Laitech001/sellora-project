@@ -1,4 +1,4 @@
-import { OrderCard, OrderCardList, OrderTable } from '@/components/dashboard/order'
+import { OrderCardList, OrderTable } from '@/components/dashboard/order'
 import { getOrdersBySlug } from '@/lib/data/Orders'
 import { Card } from '@/ui'
 

@@ -1,5 +1,4 @@
 'use client'
-import { updateOrderStatus } from '@/lib/data/Orders';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react'
 import { Modal } from '@/ui';
@@ -25,9 +24,11 @@ type OrderDetailsModalProps = {
   customerNumber?: number;
   orderTotalPrice?: number;
   orderDate?: string;
+  slug: string;
 }
 
-export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems, orderStatus, customerName, customerNumber, orderTotalPrice, orderDate }: OrderDetailsModalProps) {
+export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems, orderStatus, customerName, customerNumber, orderTotalPrice, orderDate, slug }: OrderDetailsModalProps) {
+
   const router = useRouter();
   const [updateStatus, setUpdateStatus] = useState<string | null>(null);
   const [currentStatus, setCurrentStatus] = useState(orderStatus);
@@ -91,10 +92,19 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
     try {
       setUpdateStatus(status);
 
-      await updateOrderStatus(orderId, status);
+      const res = await fetch(`/api/stores/${slug}/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        console.error("Failed to update order status:", res.status, errorBody.error);
+        return; // don't update local state if the API call failed
+      }
 
       setCurrentStatus(status);
-
       router.refresh();
     } catch (error) {
       console.error(error);

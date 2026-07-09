@@ -4,7 +4,6 @@ import { OrderCard } from '@/components/dashboard/order';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { OrderDetailsModal } from '@/components/dashboard/order'
-import { getOrderItems } from '@/lib/data/Orders';
 
 type orderProps = {
   orders: {
@@ -30,18 +29,7 @@ type OrderItemsProps = {
   product_image: string;
 };
 
-type SelectedOrderProps = {
-  id: string;
-  customer_name: string;
-  customer_number: number;
-  total_price: number;
-  total_items: number;
-  total_quantity: number;
-  status: string;
-  created_at: string;
-}
-
-export default function OrderCardList({ orders }: orderProps) {
+export default function OrderCardList({ orders, slug }: orderProps & { slug: string }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -59,8 +47,13 @@ export default function OrderCardList({ orders }: orderProps) {
   useEffect(() => {
     const fetchOrderItems = async () => {
       if (selectedOrder?.id) {
-        const items = await getOrderItems(selectedOrder.id);
-        setOrderItems(items);
+        const res = await fetch(`/api/stores/${slug}/orders/${selectedOrder.id}/items`);
+        if (res.ok) {
+          const data = await res.json();
+          setOrderItems(data.items);
+        } else {
+          console.error('Failed to fetch order items');
+        }
       }
     };
 
@@ -91,6 +84,7 @@ export default function OrderCardList({ orders }: orderProps) {
         customerNumber={selectedOrder?.customer_number}
         orderTotalPrice={selectedOrder?.total_price}
         orderDate={selectedOrder?.created_at}
+        slug={slug}
       />
     </>
   )

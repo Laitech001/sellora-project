@@ -1,9 +1,9 @@
 'use client'
 import ProductCard from "./ProductCard"
-import { deleteProduct} from "@/lib/data/Products"
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Modal, Button, Card } from '@/ui';
+import { toast } from 'sonner';
 
 type ProductImage = {
   id: string;
@@ -27,7 +27,7 @@ type productProps = {
   }[]
 }
 
-export default function ProductCardList({products}: productProps) {
+export default function ProductCardList({products, slug }: productProps & { slug: string }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -46,14 +46,27 @@ export default function ProductCardList({products}: productProps) {
   const handleDelete = async (id: string) => {
     setIsLoading(true);
     try {
-      await deleteProduct(id);
-      
+      const res = await fetch(`/api/stores/${slug}/products/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to delete product');
+      }
+
       setSelectedId(null);
       setIsModalOpen(false);
 
       router.refresh();
+      toast.success('Product deleted successfully');
     } catch (error) {
       console.log(error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete product"
+      );
     } finally {
       setIsLoading(false);
     }

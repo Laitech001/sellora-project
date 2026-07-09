@@ -103,12 +103,12 @@ export default async function Dashboard({ params }: ParamsPprops) {
 
         {/* mobile recent order layout */}
         <section>
-          <OrderCardList orders={orders}/>
+          <OrderCardList orders={orders} slug={slug} />
         </section>
 
         {/* desktop recent order layout */}
         <section className="hidden lg:block">
-          <OrderTable orders={recentOrders} />
+          <OrderTable orders={recentOrders} slug={slug} />
         </section> 
       </div>
 
