@@ -160,7 +160,7 @@ export default function OrderDetailsModal({ orderId, isOpen, onClose, orderItems
 
           <div>
             {
-              orderItems.map((item) => (
+              (orderItems ?? []).map((item) => (
                 <div 
                   key={item.id}
                   className='flex flex-wrap justify-between gap-6 border border-slate-500 rounded-lg p-3 mb-2'

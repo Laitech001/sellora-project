@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
-import { Mail, User, Eye, EyeOff, ShieldCheck, Sparkles } from "lucide-react";
+import { Mail, Eye, EyeOff, ShieldCheck, Sparkles } from "lucide-react";
 import { Form, TextInput, Label, Button, GoogleIcon} from '@/ui';
 import { supabase } from "@/lib/supabase";
-import { BrandLogoName } from "@/ui/Brand";
-import { sign } from "crypto";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Authform() {
@@ -122,8 +120,6 @@ export default function Authform() {
         password: loginData.password
       })
 
-      console.log(data);
-
       if (loginError) {
         setLoginError(loginError.message);
         console.log(loginError.message);
@@ -131,7 +127,6 @@ export default function Authform() {
       }
 
       if (data.user && data.session) {
-        console.log('about to redirect');
         router.push('/dashboard');
         router.refresh();
       } else {

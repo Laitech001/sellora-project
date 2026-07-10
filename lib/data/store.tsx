@@ -13,6 +13,7 @@ type Store = {
 export async function getStoreBySlug( slug: string): Promise<Store | null> {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  
   const cookieStore = await cookies();
 
   try {

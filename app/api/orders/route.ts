@@ -1,41 +1,20 @@
-import { supabase } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabaseAdmin";
+import { NextResponse } from "next/server";
 
-type products = {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-}
+const MAX_ITEMS = 50;
+const MAX_QUANTITY_PER_ITEM = 100;
+const NAME_MAX_LENGTH = 100;
+const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
 
-export async function GET() {
-  const { data, error } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      product:products (
-        name
-      )
-    `);
+type RawOrderItem = {
+  productId: number;
+  quantity: number;
+};
 
-  if (error) {
-    console.error(error);
-    return Response.json(
-      { error: 'Failed to fetch orders' },
-      { status: 500 }
-    );
-  }
-
-  return Response.json(data);
-}
-
-// Formats a phone number for use in a wa.me link. WhatsApp links require 
 function sanitizePhoneForWhatsApp(rawNumber: string | null | undefined): string | null {
   if (!rawNumber) return null;
-
   const digitsOnly = rawNumber.replace(/\D/g, "");
-  if (digitsOnly.length < 8) return null;
-
-  return digitsOnly;
+  return digitsOnly.length >= 8 ? digitsOnly : null;
 }
 
 function buildWhatsAppMessage(params: {
@@ -60,152 +39,145 @@ function buildWhatsAppMessage(params: {
   );
 }
 
+function getPrimaryImageUrl(
+  images: { image_url: string; is_primary: boolean }[] | null | undefined
+): string | null {
+  if (!images || images.length === 0) return null;
+  const primary = images.find((img) => img.is_primary);
+  return primary ? primary.image_url : images[0].image_url;
+}
+
+// Validates raw input and merges duplicate productIds into a single quantity.
+function parseAndValidateItems(rawItems: unknown): { productId: number; quantity: number }[] | null {
+  if (!Array.isArray(rawItems) || rawItems.length === 0 || rawItems.length > MAX_ITEMS) {
+    return null;
+  }
+
+  const merged = new Map<number, number>();
+
+  for (const raw of rawItems) {
+    if (typeof raw !== "object" || raw === null) return null;
+
+    const { productId, quantity } = raw as RawOrderItem;
+
+    if (!Number.isInteger(productId) || productId <= 0) return null;
+    if (!Number.isInteger(quantity) || quantity <= 0 || quantity > MAX_QUANTITY_PER_ITEM) return null;
+
+    merged.set(productId, (merged.get(productId) ?? 0) + quantity);
+  }
+
+  for (const quantity of merged.values()) {
+    if (quantity > MAX_QUANTITY_PER_ITEM) return null;
+  }
+
+  return Array.from(merged.entries()).map(([productId, quantity]) => ({ productId, quantity }));
+}
+
 export async function POST(request: Request) {
+  const supabase = createAdminClient();
+
+  let payload: { name?: unknown; number?: unknown; items?: unknown };
   try {
-    console.log('Received order POST request');
-    const payload = await request.json();
-    console.log('Payload:', payload);
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
 
-    const { name, number, items } = payload;
+  const { name, number, items: rawItems, storeSlug } = payload as { storeSlug?: unknown } & typeof payload;
 
-    // handle missing/incorrect fields;
-    if (!name || !number || !items || !Array.isArray(items) || items.length === 0) {
-      console.log('Missing required fields:', { name, number, items });
-      return Response.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
+  if (typeof storeSlug !== "string" || storeSlug.trim().length === 0) {
+    return NextResponse.json({ error: "Missing store slug" }, { status: 400 });
+  }
 
-    // get total Items from order items
-    const totalItems: number = items.length;
+  if (typeof name !== "string" || name.trim().length < 2 || name.trim().length > NAME_MAX_LENGTH) {
+    return NextResponse.json({ error: "Invalid customer name" }, { status: 400 });
+  }
 
-    // get all product ids from order items
-    const productIds = items.map((item: { productId: number }) => item.productId);
-    console.log('Product IDs:', productIds);
+  if (typeof number !== "string" || !PHONE_REGEX.test(number.trim())) {
+    return NextResponse.json({ error: "Invalid customer phone number" }, { status: 400 });
+  }
 
-    // validate product ids — note: also pulling product_images here now,
-    // since order_items needs an image and products no longer has a
-    // single image_url column (images live in product_images).
-    const { data: products, error: productError } = await supabase
-      .from('products')
-      .select('*, product_images(image_url, is_primary)')
-      .in('id', productIds);
+  const items = parseAndValidateItems(rawItems);
+  if (!items) {
+    return NextResponse.json({ error: "Invalid order items" }, { status: 400 });
+  }
 
-    if (productError) {
-      console.error('Product error:', productError);
-      return Response.json(
-        { error: 'Invalid product IDs in order' },
-        { status: 400 }
-      );
-    }
+  const customerName = name.trim();
+  const customerNumber = number.trim();
 
-    if (products.length !== productIds.length) {
-      console.log('Some products not found');
-      return Response.json(
-        { error: 'Some products not found' },
-        { status: 400 }
-      );
-    }
-    console.log('Products found:', products);
-
-    // check if all products have same store id
-    const storeIds = new Set(products.map((product) => product.store_id));
-
-    if (storeIds.size > 1) {
-      return Response.json(
-        { error: 'All products in an order must belong to the same store' },
-        { status: 400 }
-      );
-    }
-
-    // save store id from products
-    const storeId = storeIds.values().next().value;
-
-    // Fetch the store's WhatsApp number now that we have storeId.
-    // We need this regardless of order success/failure path below,
-    // so fetching it here (rather than after order insert) keeps
-    // the data we need available throughout.
+  try {
     const { data: storeData, error: storeError } = await supabase
-      .from('stores')
-      .select('whatsapp_number')
-      .eq('id', storeId)
+      .from("stores")
+      .select("id, whatsapp_number")
+      .eq("slug", storeSlug.trim())
       .single();
 
     if (storeError) {
-      console.error('Store fetch error:', storeError);
-      // Not fatal to the order itself — log it, but don't block the
-      // customer from placing their order just because we couldn't
-      // read the store's WhatsApp number.
+      if (storeError.code === "PGRST116") {
+        return NextResponse.json({ error: "Store not found" }, { status: 404 });
+      }
+      console.error("Store fetch error:", storeError);
+      return NextResponse.json({ error: "Failed to validate order" }, { status: 500 });
     }
 
-    // Helper to pick whichever image should represent a product in
-    // the order: primary if marked, otherwise the first available,
-    // otherwise null.
-    function getPrimaryImageUrl(
-      images: { image_url: string; is_primary: boolean }[] | null | undefined
-    ): string | null {
-      if (!images || images.length === 0) return null;
-      const primary = images.find((img) => img.is_primary);
-      return primary ? primary.image_url : images[0].image_url;
+    const storeId = storeData.id;
+    const productIds = items.map((item) => item.productId);
+
+    const { data: products, error: productError } = await supabase
+      .from("products")
+      .select("*, product_images(image_url, is_primary)")
+      .in("id", productIds)
+      .eq("store_id", storeId);
+
+    if (productError) {
+      console.error("Product fetch error:", productError);
+      return NextResponse.json({ error: "Failed to validate order" }, { status: 500 });
     }
 
-    // Create a map of productId -> product for easy lookup
-    const productMap = new Map(products.map(p => [p.id, p]));
+    if (!products || products.length !== productIds.length) {
+      return NextResponse.json(
+        { error: "One or more items do not belong to this store" },
+        { status: 400 }
+      );
+    }
 
-    // Calculate totals using actual prices from database
+    const productMap = new Map(products.map((p) => [p.id, p]));
+
     let totalPrice = 0;
     let totalQuantity = 0;
 
-    const orderItems = items.map((item: { productId: number, quantity: number }) => {
-      const product = productMap.get(item.productId);
-      if (!product) throw new Error(`Product ${item.productId} not found`);
-
-      totalQuantity += item.quantity;
+    for (const item of items) {
+      const product = productMap.get(item.productId)!;
       totalPrice += product.price * item.quantity;
+      totalQuantity += item.quantity;
+    }
 
-      return {
-        product_id: item.productId,
-        quantity: item.quantity,
-        price: product.price // Save price at time of order
-      };
-    });
-
-    const { data: orderData, error } = await supabase
-      .from('orders')
+    const { data: orderData, error: orderInsertError } = await supabase
+      .from("orders")
       .insert({
-        customer_name: name,
-        customer_number: number,
-        total_items: totalItems,
+        customer_name: customerName,
+        customer_number: customerNumber,
+        total_items: items.length,
         total_quantity: totalQuantity,
         total_price: totalPrice,
         store_id: storeId,
-        status: 'pending',
+        status: "pending",
       })
-      .select('*')
+      .select("*")
       .single();
 
-    if (error) {
-      console.error('Insert error:', error);
-      return Response.json(
-        { error: 'Failed to place order' },
-        { status: 500 }
-      );
+    if (orderInsertError || !orderData) {
+      console.error("Order insert error:", orderInsertError);
+      return NextResponse.json({ error: "Failed to place order" }, { status: 500 });
     }
-    console.log('Order inserted:', orderData);
 
-    // Insert order items with product details
-    const orderItemsPayload = items.map((item: { productId: number; quantity: number }) => {
-      const product = productMap.get(item.productId);
-
+    const orderItemsPayload = items.map((item) => {
+      const product = productMap.get(item.productId)!;
       return {
         order_id: orderData.id,
         product_id: item.productId,
         product_name: product.name,
         product_price: product.price,
-        // Fixed: product.image_url no longer exists on the products
-        // table now that images live in product_images. Resolved via
-        // the helper above instead.
         product_image: getPrimaryImageUrl(product.product_images),
         quantity: item.quantity,
         subtotal: product.price * item.quantity,
@@ -213,56 +185,39 @@ export async function POST(request: Request) {
     });
 
     const { error: orderItemsError } = await supabase
-      .from('order_items')
+      .from("order_items")
       .insert(orderItemsPayload);
 
     if (orderItemsError) {
-      console.error('Order items error:', orderItemsError);
-
-      // optional: rollback order if items fail (good practice)
-      await supabase.from('orders').delete().eq('id', orderData.id);
-
-      return Response.json(
-        { error: 'Failed to insert order items' },
-        { status: 500 }
-      );
+      console.error("Order items insert error:", orderItemsError);
+      await supabase.from("orders").delete().eq("id", orderData.id);
+      return NextResponse.json({ error: "Failed to place order" }, { status: 500 });
     }
 
-    // ── Build the WhatsApp link, if the store has a usable number ──
     const sanitizedNumber = sanitizePhoneForWhatsApp(storeData?.whatsapp_number);
-
     let whatsappUrl: string | null = null;
 
     if (sanitizedNumber) {
       const message = buildWhatsAppMessage({
-        customerName: name,
+        customerName,
         orderId: orderData.id,
         orderItems: orderItemsPayload,
         totalPrice,
       });
-
       whatsappUrl = `https://wa.me/${sanitizedNumber}?text=${encodeURIComponent(message)}`;
     }
 
-    return Response.json(
+    return NextResponse.json(
       {
         message: "Order placed successfully",
         orderId: orderData.id,
-        // null when the store has no valid WhatsApp number set — the
-        // frontend is expected to handle this by showing a fallback
-        // (e.g. "order placed, but seller has no WhatsApp linked yet")
-        // rather than assuming this is always present.
         whatsappUrl,
         hasWhatsapp: Boolean(whatsappUrl),
       },
       { status: 201 }
     );
-
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Unexpected error placing order:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

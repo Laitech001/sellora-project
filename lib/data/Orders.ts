@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { createClient } from "@/lib/supabaseServer";
+import { cookies } from 'next/headers';
 
 type Order = {
   id: string;
@@ -101,8 +102,14 @@ export async function getOrdersBySlug(slug: string): Promise<Order[]> {
     return [];
   }
 
+  const cookiesStored = await cookies();
+
   try {
-    const res = await fetch(`${baseUrl}/api/stores/${slug}/orders`)
+    const res = await fetch(`${baseUrl}/api/stores/${slug}/orders`, {
+      headers: {
+        cookie: cookiesStored.toString()
+      }
+    })
 
     if (!res.ok) {
       let message = 'Failed to fetch orders';

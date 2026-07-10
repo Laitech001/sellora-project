@@ -127,49 +127,48 @@ export default function CartClient({ slug }: CartClientProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // calling api and sending order data to server
     setLoading(true);
     try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
+      const res = await fetch("/api/orders", {
+        method: "POST",
         headers: {
-          'content-type': 'application/json'
+          "content-type": "application/json",
         },
         body: JSON.stringify({
+          storeSlug: slug,
           ...formData,
           items: cartItems.map((item) => ({
             productId: item.productId,
-            quantity: item.quantity
-          }))
-        })
+            quantity: item.quantity,
+          })),
+        }),
       });
 
       const data = await res.json();
 
-      console.log('Order response:', data);
+      if (!res.ok) {
+        console.error("Order error response:", data);
+        throw new Error(data.error || "Failed to place order");
+      }
+
+      localStorage.removeItem("cart");
 
       if (data.hasWhatsapp && data.whatsappUrl) {
         window.location.href = data.whatsappUrl;
       } else {
-        alert(
-          "Your order has been placed! The seller will reach out to confirm details soon."
-        );
+        alert("Your order has been placed! The seller will reach out to confirm details soon.");
       }
-
-      if (!res.ok) {
-        console.error('Order error response:', data);
-        throw new Error(data.error || 'Failed to place order');
-      }
-
-      localStorage.removeItem("cart");
     } catch (error) {
-      console.error('Error submitting order:', error);
-      alert('There was an error submitting your order. Please try again.');
+      console.error("Error submitting order:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "There was an error submitting your order. Please try again."
+      );
     } finally {
       setLoading(false);
       setIsModalOpen(false);
     }
-
   };
 
   return (

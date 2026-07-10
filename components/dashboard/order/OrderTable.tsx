@@ -64,7 +64,7 @@ export default function OrderTable({ orders, slug }: orderProps & { slug: string
         const res = await fetch(`/api/stores/${slug}/orders/${selectedOrder.id}/items`);
         if (res.ok) {
           const data = await res.json();
-          setOrderItems(data.items);
+          setOrderItems(data.orderItems ?? []);
         } else {
           console.error('Failed to fetch order items');
         }

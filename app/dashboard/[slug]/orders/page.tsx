@@ -12,9 +12,6 @@ export default async function OrderPage({ params }: ParamsProps) {
   const { slug } = await params;
   const orders = await getOrdersBySlug(slug);
 
-  console.log('Orders page slug:', slug);
-  console.log('Orders page orders:', orders);
-
   return (
     <div className='bg-card border border-slate-500 rounded-md p-2'>
 
@@ -28,11 +25,11 @@ export default async function OrderPage({ params }: ParamsProps) {
       </Card>
 
       <section>
-        <OrderCardList orders={orders}/>
+        <OrderCardList orders={orders} slug={slug}/>
       </section>
 
       <section className='hidden lg:block'>
-        <OrderTable orders={orders} />
+        <OrderTable orders={orders} slug={slug} />
       </section>
       
     </div>
