@@ -63,12 +63,12 @@ export default function MenuButton({ store }: menuButtonProps) {
       {menuOpen && (
         <>
           <div 
-            className="fixed inset-0 bg-black/40 z-40 overflow-y-auto"
+            className="fixed inset-0 bg-black/40 z-40"
             onClick={() => setMenuOpen(false)}
           />
 
           <aside 
-            className={`fixed flex flex-col justify-between top-0 left-0 h-screen w-60 bg-card text-gray-200 p-4 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
+            className={`fixed overflow-y-auto flex flex-col justify-between top-0 left-0 h-screen w-60 bg-card text-gray-200 p-4 z-50 transition-transform duration-300 ease-out lg:hidden ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`
           }>
             <section className='flex flex-col justify-between'>
               <div className="mb-6">
