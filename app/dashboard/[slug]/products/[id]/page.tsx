@@ -1,4 +1,5 @@
 import { DashboardProductPage } from '@/components/dashboard/product'
+import { createClient } from "@/lib/supabaseServer";
 
 type Props = {
   params: {
@@ -9,23 +10,50 @@ type Props = {
 
 export default async function ProductDetails({ params }: Props) {
   const { id, slug } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  
+  const supabase = await createClient();
 
-  const res = await fetch(`${baseUrl}/api/products/${id}`, {
-    cache: "no-store",
-  });
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-  if (!res.ok) {
-    return <div>Product not found</div>;
+  if (userError || !user) {
+    console.error('Unauthorized access to edit product');
+    return <div>Unauthorized</div>;
   }
 
-  const product = await res.json();
+  const { data: storeData, error: storeError } = await supabase
+    .from('stores')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (storeError || !storeData) {
+    console.error('Failed to fetch store data for edit product:', storeError);
+    return <div className="text-red-500 flex justify-center">Store not found</div>;
+  }
+
+  if (storeData.user_id !== user.id) {
+    console.error('User does not own the store for edit product');
+    return <div className="text-red-500 flex justify-center">Unauthorized</div>;
+  }
+
+  const { data: productData, error: productError } = await supabase
+    .from('products')
+    .select('*, product_images(*)')
+    .eq('id', id)
+    .eq('store_id', storeData.id)
+    .single()
+
+  if (!productData || productError) {
+    console.error('Failed to fetch product data for edit product:', productError);
+    return <div className="text-red-500 flex justify-center">Product not found</div>
+  }
 
   return (
     <>
-      {/* <ProductDetailsCard product={product}/> */}
-
-      <DashboardProductPage product={product} slug={slug}/>
+      <DashboardProductPage 
+        product={productData} 
+        slug={slug}
+      />
     </>
   )
 }

@@ -116,9 +116,6 @@ export default function AddProductForm({ storeSlug }: Props) {
     form.append('description', formData.description);
     form.append('stock', formData.stock);
 
-    // appending multiple files under the same key — backend wiring for
-    // Supabase Storage comes next, this just gets all selected files
-    // onto the wire correctly.
     images.forEach(({ file }) => {
       form.append('images', file);
     });

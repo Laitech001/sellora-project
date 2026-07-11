@@ -49,7 +49,7 @@ export default function ProductTable({ products, slug }: ProductProps & { slug: 
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/stores/${slug}/products/${id}`, {
+      const res = await fetch(`/api/stores/${slug}/products/${selectedId}`, {
         method: 'DELETE',
       });
 

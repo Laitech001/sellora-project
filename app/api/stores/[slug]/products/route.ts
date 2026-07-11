@@ -69,102 +69,110 @@ export async function GET(req: Request, context: ParamsProps) {
   }
 }
 
-// ============================================================
-// POST /api/stores/[slug]/products
-//
-// Creates a new product, uploads up to 4 images to Storage,
-// and inserts one row per image into product_images.
-// ============================================================
+// POST route for adding a new product to a store;
+
+const MAX_IMAGES = 4;
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+const NAME_MAX_LENGTH = 150;
+const DESCRIPTION_MAX_LENGTH = 2000;
+
+function sanitizeFileName(fileName: string): string {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-100);
+}
+
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
     const supabase = await createClient();
 
-  // Get the logged in user server-side
-  const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  if (!user) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
+    const formData = await request.formData();
 
-    const name = formData.get('name') as string;
-    const price = formData.get('price') as string;
-    const description = formData.get('description') as string;
-    const stock = formData.get('stock') as string;
-    const storeSlug = formData.get('storeSlug') as string;
+    const storeSlug = formData.get("storeSlug") as string | null;
+    const name = (formData.get("name") as string | null)?.trim();
+    const price = formData.get("price") as string | null;
+    const description = (formData.get("description") as string | null)?.trim();
+    const stock = formData.get("stock") as string | null;
+    const imageFiles = formData.getAll("images") as File[];
 
-    // frontend appends every file under the same key: 'images'.
-    // formData.getAll() (not .get()) returns ALL values for that key
-    // as an array — this is how I receive multiple files from one field.
-    const imageFiles = formData.getAll('images') as File[];
-
-    // Validate required fields
     if (!storeSlug) {
-      return Response.json({ error: 'Missing store slug' }, { status: 400 });
+      return NextResponse.json({ error: "Missing store slug" }, { status: 400 });
     }
 
-    if (!name?.trim()) {
-      return Response.json({ error: 'Product name is required' }, { status: 400 });
+    if (!name || name.length < 2 || name.length > NAME_MAX_LENGTH) {
+      return NextResponse.json({ error: "Product name is required" }, { status: 400 });
     }
 
-    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
-      return Response.json({ error: 'Price must be a positive number' }, { status: 400 });
+    const priceNum = Number(price);
+    if (!price || !Number.isFinite(priceNum) || priceNum <= 0) {
+      return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
     }
 
-    if (!description?.trim()) {
-      return Response.json({ error: 'Description is required' }, { status: 400 });
+    if (!description || description.length > DESCRIPTION_MAX_LENGTH) {
+      return NextResponse.json({ error: "Description is required" }, { status: 400 });
     }
 
-    if (!stock || isNaN(Number(stock)) || Number(stock) < 0) {
-      return Response.json({ error: 'Stock must be a non-negative number' }, { status: 400 });
+    const stockNum = Number(stock);
+    if (!stock || !Number.isInteger(stockNum) || stockNum < 0) {
+      return NextResponse.json({ error: "Stock must be a non-negative whole number" }, { status: 400 });
     }
 
-    // Look up the store first — I need its id before I can insert
-    // the product (products.store_id is a foreign key to stores.id).
+    const actualFiles = imageFiles.filter((f) => f instanceof File && f.size > 0);
+
+    if (actualFiles.length > MAX_IMAGES) {
+      return NextResponse.json({ error: `Maximum ${MAX_IMAGES} images allowed` }, { status: 400 });
+    }
+
+    for (const file of actualFiles) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        return NextResponse.json({ error: `Unsupported image type: ${file.type}` }, { status: 400 });
+      }
+      if (file.size > MAX_IMAGE_SIZE) {
+        return NextResponse.json({ error: `Image "${file.name}" exceeds 5MB limit` }, { status: 400 });
+      }
+    }
+
     const { data: storeData, error: storeError } = await supabase
-      .from('stores')
-      .select('id')
-      .eq('slug', storeSlug)
+      .from("stores")
+      .select("id, user_id")
+      .eq("slug", storeSlug)
       .single();
 
     if (storeError) {
-      console.error('Error fetching store data:', storeError);
-      throw new Error('Failed to fetch store data');
+      if (storeError.code === "PGRST116") {
+        return NextResponse.json({ error: "Store not found" }, { status: 404 });
+      }
+      console.error("Store fetch error:", storeError);
+      return NextResponse.json({ error: "Failed to fetch store data" }, { status: 500 });
     }
 
-    if (!storeData) {
-      console.error('Store not found for slug:', storeSlug);
-      throw new Error('Store not found');
+    if (storeData.user_id !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Insert the product row FIRST, before touching images.
-    // Why: product_images.product_id needs a real product id to point to,
-    // so the product must exist before we can attach images to it.
     const { data: newProduct, error: productInsertError } = await supabase
-      .from('products')
+      .from("products")
       .insert({
         name,
-        price: Number(price),
+        price: priceNum,
         description,
-        stock: Number(stock),
+        stock: stockNum,
         store_id: storeData.id,
       })
-      .select('id')
+      .select("id")
       .single();
 
-    if (productInsertError) {
-      console.error('Product insert error:', productInsertError);
-      throw new Error(`Failed to insert product: ${productInsertError.message}`);
+    if (productInsertError || !newProduct) {
+      console.error("Product insert error:", productInsertError);
+      return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
     }
-    if (!newProduct) throw new Error('Product insert returned no data');
 
     const productId = newProduct.id;
 
-    // Upload each image file to Storage, one at a time, and collect
-    // the data I'll need to insert into product_images afterward.
     const imageRows: {
       product_id: string;
       image_url: string;
@@ -172,60 +180,47 @@ export async function POST(request: Request) {
       is_primary: boolean;
     }[] = [];
 
-    for (let i = 0; i < imageFiles.length; i++) {
-      const file = imageFiles[i];
-
-      // Skip anything that isn't actually a file (e.g. an empty entry)
-      if (!file || typeof file === 'string') continue;
-
-      // Unique filename: timestamp + index + original name, so two
-      // images uploaded in the same millisecond never collide.
-      const storagePath = `${productId}/${Date.now()}-${i}-${file.name}`;
+    for (let i = 0; i < actualFiles.length; i++) {
+      const file = actualFiles[i];
+      const storagePath = `${productId}/${Date.now()}-${i}-${sanitizeFileName(file.name)}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('product-image')
-        .upload(storagePath, file);
+        .from("product-image")
+        .upload(storagePath, file, { contentType: file.type });
 
       if (uploadError) {
         console.error(`Failed to upload image ${i}:`, uploadError);
-        continue; // one failed image shouldn't kill the whole product creation
+        continue;
       }
 
       const { data: publicUrlData } = supabase.storage
-        .from('product-image')
+        .from("product-image")
         .getPublicUrl(storagePath);
 
       imageRows.push({
         product_id: productId,
         image_url: publicUrlData.publicUrl,
         storage_path: storagePath,
-        is_primary: i === 0, // first image uploaded becomes the cover image
+        is_primary: i === 0,
       });
     }
 
-    // Insert all image rows in a single call rather than one-by-one —
-    // fewer round trips to the database, and they either all succeed
-    // or all fail together.
     if (imageRows.length > 0) {
       const { error: imagesInsertError } = await supabase
-        .from('product_images')
+        .from("product_images")
         .insert(imageRows);
 
       if (imagesInsertError) {
-        console.error('Failed to insert image rows:', imagesInsertError);
-        // Note: the product itself was still created successfully.
-        // We don't throw here, since the product existing without
-        // images is recoverable — the user can add images later.
+        console.error("Failed to insert image rows:", imagesInsertError);
       }
     }
 
-    return Response.json(
-      { message: 'Product added successfully', productId },
+    return NextResponse.json(
+      { message: "Product added successfully", productId },
       { status: 201 }
     );
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error in POST /api/stores/[slug]/products:', errorMessage, error);
-    return Response.json({ error: errorMessage }, { status: 500 });
+    console.error("Error in POST /api/stores/[slug]/products:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

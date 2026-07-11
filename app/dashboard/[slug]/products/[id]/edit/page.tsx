@@ -6,14 +6,12 @@ import { EditProductForm } from "@/components/dashboard/product";
     id: string;
     slug: string;
   }
- }
+  }
 
- export const dynamic = "force-dynamic";
+  export const dynamic = "force-dynamic";
 
- export default async function EditProductPage({ params }: PageProps) {
+export default async function EditProductPage({ params }: PageProps) {
   const { id, slug } = await params;
-
-  console.log('EditProductPage params:', params);
 
   const supabase = await createClient();
 
@@ -49,12 +47,12 @@ import { EditProductForm } from "@/components/dashboard/product";
 
   if (!productData || productError) {
     console.error('Failed to fetch product data for edit product:', productError);
-    return <div>Product not found</div>
+    return <div className="text-red-500 flex justify-center">Product not found</div>
   }
-  
+
   return (
     <>
       <EditProductForm product={productData} />
     </>
   )
- }
+}

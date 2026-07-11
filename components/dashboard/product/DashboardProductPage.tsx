@@ -4,13 +4,8 @@ import { useRouter } from "next/navigation";
 import ProductDetailsView, { type Product } from "@/components/product-details/ProductDetailsView";
 import DashboardAction from "@/components/product-details/DashboardAction";
 
-// Same shell, same ProductInfo, same ProductImageGallery as the storefront
-// page — the only difference is which actions component gets passed in,
-// and what each button actually does.
 export default function DashboardProductPage({ product, slug }: { product: Product; slug: string }) {
   const router = useRouter();
-
-  console.log(slug);
 
   const handleEdit = () => {
     router.push(`/dashboard/${slug}/products/${product.id}/edit`);
@@ -19,9 +14,15 @@ export default function DashboardProductPage({ product, slug }: { product: Produ
   const handleDelete = async () => {
     if (!confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
 
-    const res = await fetch(`/api/products/${product.id}`, { method: "DELETE" });
+    const res = await fetch(`/api/stores/${slug}/products/${product.id}`, { method: "DELETE" });
+
+    if (!res.ok) {
+      const errrorData = await res.json();
+      throw new Error(errrorData.message || "Failed to delete product");
+    }
+
     if (res.ok) {
-      router.push("/dashboard/products");
+      router.push(`/dashboard/${slug}/products`);
     } else {
       alert("Failed to delete product");
     }
@@ -36,7 +37,7 @@ export default function DashboardProductPage({ product, slug }: { product: Produ
   };
 
   const handleViewAnalytics = () => {
-    router.push(`/dashboard/products/${product.id}/analytics`);
+    router.push(`/dashboard/${slug}/products/${product.id}/analytics`);
   };
 
   return (

@@ -14,10 +14,6 @@ export default async function Products( {params}: ParamsPprops ) {
   const { slug } = await params;
   const products = await getProductsBySlug(slug);
 
-  console.log(products.length);
-  console.log('Products page slug:', slug);
-  console.log('Products page products:', products);
-
   return (
     <>
       <div className='bg-card p-2 border border-slate-500 rounded-md'>
@@ -37,11 +33,11 @@ export default async function Products( {params}: ParamsPprops ) {
         {products && products.length > 0 ? (
           <>
             <div className='hidden md:block p-2'>
-              <ProductTable products={products} />
+              <ProductTable products={products} slug={slug} />
             </div>
             
             <div className='md:hidden p-2'>
-              <ProductCardList products={products}/>
+              <ProductCardList products={products} slug={slug} />
             </div>
             
           </>
