@@ -113,7 +113,7 @@ export default function ProductTable({ products, slug }: ProductProps & { slug: 
                   variant="danger"
                   onClick={() => handleDelete(selectedId!)}
                 >
-                  {isLoading ? 'Deleting' : 'Delete'}
+                  {isLoading ? 'Deleting...' : 'Delete'}
                 </Button>
 
                 <Button onClick={onClose} variant="secondary">Cancel</Button>

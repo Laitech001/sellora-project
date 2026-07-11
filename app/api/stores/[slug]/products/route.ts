@@ -70,7 +70,6 @@ export async function GET(req: Request, context: ParamsProps) {
 }
 
 // POST route for adding a new product to a store;
-
 const MAX_IMAGES = 4;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];

@@ -34,7 +34,7 @@ export default function Instruction() {
 
         {
           instructions.map((instruction) => (
-            <ul>
+            <ul key={instruction.title}>
               <li 
                 key={instruction.title} 
                 className="mb-2"

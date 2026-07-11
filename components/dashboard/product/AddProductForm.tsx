@@ -3,6 +3,7 @@ import { useState, useRef } from "react"
 import { Button, Label, TextInput, TextArea, Form } from '@/ui'
 import { useRouter } from "next/navigation"
 import { UploadCloud, X, ImagePlus } from "lucide-react"
+import { toast } from 'sonner';
 
 type Props = {
   storeSlug: string;
@@ -127,11 +128,17 @@ export default function AddProductForm({ storeSlug }: Props) {
       })
 
       if (!res.ok) {
-        throw new Error('Failed to add product');
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to add product');
       }
+
+      toast.success('Product added successfully');
     } catch (error) {
-      console.error(error);
-      alert('Failed to add product');
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to add product"
+      );
     } finally {
       setLoading(false);
       router.back();

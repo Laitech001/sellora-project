@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Modal, Button, Form, TextInput, TextArea, Label } from '@/ui'
+import { toast } from 'sonner';
 
 interface Props {
   isOpen: boolean;
@@ -70,6 +71,7 @@ const [storeData, setStoreData] = useState({
         return;
       }
 
+      toast.success('Store created successfully!');
       router.push(`/dashboard/${result.store.slug}`);
       router.refresh();
 

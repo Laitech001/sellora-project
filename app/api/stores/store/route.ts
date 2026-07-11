@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     const { storeName, slug, whatsappNumber, businessType, address } = cleaned;
 
-    // Save to stores table — user_id comes from the verified session, never from client input
+    // Save to stores table, user_id comes from the verified session, never from client input
     const { data, error } = await supabase
       .from('stores')
       .insert({
@@ -93,7 +93,6 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      // Log full details server-side only; never leak raw DB errors to the client
       console.error('Supabase insert error:', error);
 
       if (error.code === '23505') {
