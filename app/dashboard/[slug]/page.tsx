@@ -16,8 +16,6 @@ type ParamsPprops = {
 export default async function Dashboard({ params }: ParamsPprops) {
   const { slug } = await params;
 
-  console.log('Dashboard slug:', slug);
-
   const orders = await getOrdersBySlug(slug);
   const recentOrders = await getRecentOrders(slug);
 
