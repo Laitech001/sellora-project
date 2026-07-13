@@ -16,7 +16,7 @@ export default function EmptyState({title, description, actionText, actionLink}:
       {actionText && actionLink && (
         <Link
           href={actionLink}
-          className='py-2 px-3 bg-blue-600 text-white border border-blue-600 rounded-lg text-md hover:bg-white hover:text-blue-600 transition'
+          className='py-2 px-3 bg-primary-500 text-white hover:bg-primary-500 border border-primary-500 rounded-lg transition'
         >
           {actionText}
         </Link>

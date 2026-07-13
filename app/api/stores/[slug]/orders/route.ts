@@ -11,8 +11,6 @@ export async function GET(req: Request, context: ParamaProps) {
   const { slug } = await context.params;
   const supabase = await createClient();
 
-  console.log('GET request received for orders with slug:', slug);
-
   // get logged in user server-side
   const { data: { user }, error: userError } = await supabase.auth.getUser();
 
