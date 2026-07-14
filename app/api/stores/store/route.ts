@@ -2,10 +2,10 @@
 import { createClient } from "@/lib/supabaseServer"
 import { NextRequest, NextResponse } from 'next/server';
 
-// --- Validation helpers ---
+// Validation helpers
 const SLUG_REGEX = /^[a-z0-9-]{3,50}$/;
 const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
-// const ALLOWED_BUSINESS_TYPES = ['retail', 'restaurant', 'services', 'other'];
+const ALLOWED_BUSINESS_CATEGORIES = ['fashion', 'electronics', 'computers', 'food_beverage', 'beauty', 'home_furniture', 'sports_fitness', 'other'];
 
 function validateStoreInput(body: any) {
   const errors: string[] = [];
@@ -13,24 +13,32 @@ function validateStoreInput(body: any) {
   const storeName = typeof body.storeName === 'string' ? body.storeName.trim() : '';
   const slug = typeof body.slug === 'string' ? body.slug.trim().toLowerCase() : '';
   const whatsappNumber = typeof body.whatsappNumber === 'string' ? body.whatsappNumber.trim() : '';
-  const businessType = typeof body.businessType === 'string' ? body.businessType.trim() : '';
+  const businessCategory = typeof body.businessCategory === 'string' ? body.businessCategory.trim() : '';
   const address = typeof body.address === 'string' ? body.address.trim() : '';
 
-  if (!storeName || storeName.length < 2 || storeName.length > 100) {
+  if (!storeName) {
+    errors.push('Store name is required');
+  } else if (storeName.length < 2 || storeName.length > 100) {
     errors.push('Store name must be between 2 and 100 characters');
   }
 
-  if (!slug || !SLUG_REGEX.test(slug)) {
+  if (!slug) {
+    errors.push('Slug is required');
+  } else if (!SLUG_REGEX.test(slug)) {
     errors.push('Slug must be 3-50 characters, lowercase letters, numbers, and hyphens only');
   }
 
-  if (whatsappNumber && !PHONE_REGEX.test(whatsappNumber)) {
-    errors.push('WhatsApp number format is invalid');
+  if (!whatsappNumber) {
+    errors.push("WhatsApp number is required");
+  } else if (!PHONE_REGEX.test(whatsappNumber)) {
+    errors.push("WhatsApp number format is invalid");
   }
 
-  // if (businessType && !ALLOWED_BUSINESS_TYPES.includes(businessType)) {
-  //   errors.push('Invalid business type');
-  // }
+  if (!businessCategory) {
+    errors.push('Business category is required');
+  } else if (!ALLOWED_BUSINESS_CATEGORIES.includes(businessCategory)) {
+    errors.push('Invalid business category');
+  }
 
   if (address && address.length > 300) {
     errors.push('Address must be under 300 characters');
@@ -38,7 +46,7 @@ function validateStoreInput(body: any) {
 
   return {
     errors,
-    cleaned: { storeName, slug, whatsappNumber, businessType, address },
+    cleaned: { storeName, slug, whatsappNumber, businessCategory, address },
   };
 }
 
@@ -46,7 +54,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
 
-    // Get the logged in user server-side (verified against Supabase Auth, not just cookie-trusted)
+    // Get the logged in user server-side
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (!user || authError) {
@@ -76,7 +84,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { storeName, slug, whatsappNumber, businessType, address } = cleaned;
+    const { storeName, slug, whatsappNumber, businessCategory, address } = cleaned;
 
     // Save to stores table, user_id comes from the verified session, never from client input
     const { data, error } = await supabase
@@ -84,10 +92,11 @@ export async function POST(request: NextRequest) {
       .insert({
         name: storeName,
         slug,
-        whatsapp_number: whatsappNumber || null,
-        business_type: businessType || null,
+        whatsapp_number: whatsappNumber,
+        business_category: businessCategory,
         address: address || null,
         user_id: user.id,
+        email: user.email
       })
       .select()
       .single();

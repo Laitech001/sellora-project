@@ -1,8 +1,9 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Modal, Button, Form, TextInput, TextArea, Label } from '@/ui'
+import { Modal, Button, Form, TextInput, TextArea, Label, Dropdown } from '@/ui'
 import { toast } from 'sonner';
+import { BUSINESS_CATEGORY_OPTIONS } from '@/lib/constants/data';
 
 interface Props {
   isOpen: boolean;
@@ -12,12 +13,11 @@ interface Props {
 export default function CreateStoreModal({ isOpen, onClose }: Props) {
 const router = useRouter();
 const [loading, setLoading] = useState(false);
-const [error, setError] = useState(false);
 const [storeData, setStoreData] = useState({
   storeName: '',
   slug: '',
   whatsappNumber: '',
-  businessType: '',
+  businessCategory: '',
   address: ''
 });
 
@@ -67,7 +67,8 @@ const [storeData, setStoreData] = useState({
       const result = await response.json();
 
       if (!response.ok) {
-        setError(result.error);
+        toast.error(result.error || 'Something went wrong while creating the store.');
+        console.log(result.error);
         return;
       }
 
@@ -83,7 +84,7 @@ const [storeData, setStoreData] = useState({
         storeName: '',
         slug: '',
         whatsappNumber: '',
-        businessType: '',
+        businessCategory: '',
         address: ''
       })
     }
@@ -128,15 +129,17 @@ const [storeData, setStoreData] = useState({
             </div>
 
             <div>
-              <Label htmlFor="businessType">Business Type <span className="text-xs text-text-secondary font-normal">(required)</span></Label>
-              <TextInput 
-                id="businessType"
-                type="text"
-                name="businessType"
-                value={storeData.businessType}
-                placeholder="Enter Your Business Type"
-                onChange={handleChange}
-                required
+              <Label htmlFor="businessCategory">
+                Business Category <span className="text-xs text-text-secondary font-normal">(required)</span>
+              </Label>
+              <Dropdown
+                id="businessCategory"
+                value={storeData.businessCategory}
+                onChange={
+                  (value: string) => setStoreData((prev) => ({ ...prev, businessCategory: value }))
+                }
+                options={BUSINESS_CATEGORY_OPTIONS}
+                placeholder="Select your business category"
               />
             </div>
 

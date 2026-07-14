@@ -1,18 +1,12 @@
 'use client'
 import { Store, Building2, MapPin, Phone, ArrowRight, ChevronRight, } from 'lucide-react'
 import Link from 'next/link'
+import { Store as StoreType } from '@/types'
 
 type Props = {
-  stores: {
-    id: string;
-    name: string;
-    slug: string;
-    whatsapp_number: string;
-    business_type: string;
-    address: string | null;
-    created_at: string;
-  }[] | null
+  stores: StoreType[] | null
 }
+
 export default function DisplayStores({stores}: Props) {
 
   if (!stores) {
@@ -37,7 +31,7 @@ export default function DisplayStores({stores}: Props) {
                 className='text-gray-200 text-sm flex items-center gap-1'
               >
                 <Building2 size={16} />
-                <span>Business Type: {store.business_type}</span>
+                <span>Business Category: {store.business_category}</span>
               </p>
 
               <p 

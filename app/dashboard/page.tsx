@@ -2,20 +2,10 @@ import { createClient } from "@/lib/supabaseServer"
 import { OnboardingHeader } from "@/components/dashboard/layout"
 import DisplayStores from "@/components/dashboard/others/DisplayStores";
 import CreateStoreButton from "@/components/dashboard/others/CreateStoreButton";
+import { Store } from "@/types";
 
 export default async function Dashboard() {
   const supabase = await createClient();
-
-  interface Store {
-    id: string;
-    user_id: string;
-    name: string;
-    slug: string;
-    whatsapp_number: string;
-    business_type: string;
-    address: string | null;
-    created_at: string;
-  }
 
   const { data: { user }, error } = await supabase.auth.getUser();
 

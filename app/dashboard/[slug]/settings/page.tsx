@@ -13,7 +13,7 @@ export default async function SettingsRoute({ params }: { params: Promise<{ slug
       store={{
         name: store.name,
         whatsappNumber: store.whatsapp_number,
-        email: store.email,
+        email: store.email || '',
         phoneNumber: store.whatsapp_number,
         logoUrl: store.logo_url,
         slug: store.slug,

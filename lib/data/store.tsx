@@ -1,14 +1,5 @@
 import { cookies } from 'next/headers';
-
-type Store = {
-  id: string
-  name: string
-  slug: string
-  whatsapp_number: string
-  address: string
-  business_type: string
-  user_id: string
-}
+import { Store } from '@/types';
 
 export async function getStoreBySlug( slug: string): Promise<Store | null> {
 

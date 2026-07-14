@@ -17,16 +17,17 @@ export default function Spinner({ size = "md", label, fullScreen = false, classN
       <div
         role="status"
         aria-label={label ?? "Loading"}
-        className={`${SIZE_MAP[size]} animate-spin rounded-full border-slate-200 border-t-emerald-600`}
+        className={`${SIZE_MAP[size]} animate-spin rounded-full border-border-soft`}
+        style={{ borderTopColor: "var(--color-primary-500)" }}
       />
-      {label && <p className="text-sm text-slate-500">{label}</p>}
+      {label && <p className="text-sm text-text-secondary">{label}</p>}
     </div>
   );
 
   if (!fullScreen) return spinner;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark/70 backdrop-blur-sm">
       {spinner}
     </div>
   );

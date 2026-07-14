@@ -3,7 +3,7 @@ import { Spinner } from "@/ui";
 export default function Loading() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <Spinner size="lg" label="Loading..." />
+      <Spinner size="lg" label="Fetching data..." />
     </div>
   );
 }
