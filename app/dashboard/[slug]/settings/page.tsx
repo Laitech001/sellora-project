@@ -12,10 +12,9 @@ export default async function SettingsRoute({ params }: { params: Promise<{ slug
     <SettingsPage
       store={{
         name: store.name,
-        whatsappNumber: store.whatsapp_number,
+        whatsapp_number: store.whatsapp_number,
         email: store.email || '',
-        phoneNumber: store.whatsapp_number,
-        logoUrl: store.logo_url,
+        logo_url: store.logo_url || '',
         slug: store.slug,
       }}
       onSave={async (data) => {

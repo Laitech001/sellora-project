@@ -6,6 +6,7 @@ import CartItems from "./CartItems";
 import CartSummary from "./CartSummary";
 import { Home } from 'lucide-react';
 import { Card, Form, Modal, Label, TextInput, Button, FloatingButton } from "@/ui";
+import { toast } from 'sonner';
 
 type CartClientProps = {
   slug: string;
@@ -124,7 +125,7 @@ export default function CartClient({ slug }: CartClientProps) {
   }
 
   //handle submit order form
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
@@ -152,15 +153,16 @@ export default function CartClient({ slug }: CartClientProps) {
       }
 
       localStorage.removeItem("cart");
+      setCartItems([]);
 
       if (data.hasWhatsapp && data.whatsappUrl) {
-        window.location.href = data.whatsappUrl;
+        window.open(data.whatsappUrl, "_blank", "noopener,noreferrer");
       } else {
-        alert("Your order has been placed! The seller will reach out to confirm details soon.");
+        toast.success("Your order has been placed! The seller will reach out to confirm details soon.");
       }
     } catch (error) {
       console.error("Error submitting order:", error);
-      alert(
+      toast.error(
         error instanceof Error
           ? error.message
           : "There was an error submitting your order. Please try again."
@@ -220,7 +222,7 @@ export default function CartClient({ slug }: CartClientProps) {
         isModalOpen && (
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             
-             <Form onSubmit={handleSubmit}>
+             <Form onSubmit={handleSubmitOrder}>
               <h2 className="font-bold text-center text-xl mb-4">Your Contact Information</h2>
               <div>
                 <Label htmlFor="name">Name</Label>

@@ -13,12 +13,15 @@ import {
   LogOut  
 } from "lucide-react";
 import { useLogout } from '@/hooks/useLogout';
+import { useState } from 'react';
+import Image from 'next/image';
 
 type sidebarProps = {
   store: {
     id: string;
     name: string;
     slug: string;
+    logo_url?: string;
   }
 }
 
@@ -26,8 +29,9 @@ export default function Sidebar({ store }: sidebarProps) {
   const pathname = usePathname();
   const params = useParams();
   const slug = params.slug;
+
   const { logout, isLoading } = useLogout();
-  
+  const [ logoPreview, setLogoPreview ] = useState(store.logo_url ?? "");
   type NavLink = {
     href: string,
     label: string,
@@ -88,11 +92,14 @@ export default function Sidebar({ store }: sidebarProps) {
           <div className='flex justify-between items-center p-2 rounded-md border border-slate-500'>
                
             <div className='flex items-center gap-1'>
-              <section className='p-2 bg-circle-background border border-slate-500 rounded-full w-max'>
-                <h1 className='font-semibold'>
-                  {getStoreInitials(store.name)}
-                </h1>
-              </section>
+
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-border-soft bg-circle-background">
+                {logoPreview ? (
+                  <img src={logoPreview} alt="Store logo" className="h-full w-full object-cover" />
+                ) : (
+                  <span className="text-lg font-semibold text-content">{getStoreInitials(store.name)}</span>
+                )}
+              </div>
 
               <section className='flex flex-col'>
                 <h1 className='font-semibold text-md'>{store.name}</h1>

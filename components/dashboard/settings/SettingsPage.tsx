@@ -15,19 +15,18 @@ import {
   Loader2,
 } from "lucide-react";
 
-export type StoreSettingsData = {
+export type storeSettingDataProps = {
   name: string;
-  whatsappNumber: string;
-  email?: string;
-  phoneNumber?: string;
-  logoUrl?: string;
+  whatsapp_number: string;
+  email: string;
   slug: string;
-};
+  logo_url: string;
+}
 
 type SettingsPageProps = {
-  store: StoreSettingsData;
+  store: storeSettingDataProps;
   storeBaseUrl?: string; // e.g. "sellora.store"
-  onSave?: (data: Omit<StoreSettingsData, "slug" | "logoUrl">) => Promise<void> | void;
+  onSave?: (data: Omit<storeSettingDataProps, "slug" | "logo_url">) => Promise<void> | void;
   onLogoChange?: (file: File) => Promise<void> | void;
   onDeleteStore?: () => Promise<void> | void;
 };
@@ -50,9 +49,11 @@ function getInitials(name: string) {
     .join("");
 }
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 export default function SettingsPage({
   store,
-  storeBaseUrl = "sellora.store",
+  storeBaseUrl = baseUrl,
   onSave,
   onLogoChange,
   onDeleteStore,
@@ -61,11 +62,10 @@ export default function SettingsPage({
   
   const [form, setForm] = useState({
     name: store.name,
-    whatsappNumber: store.whatsappNumber,
+    whatsapp_number: store.whatsapp_number,
     email: store.email ?? "",
-    phoneNumber: store.phoneNumber ?? "",
   });
-  const [logoPreview, setLogoPreview] = useState(store.logoUrl ?? "");
+  const [logoPreview, setLogoPreview] = useState(store.logo_url ?? "");
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -123,10 +123,10 @@ export default function SettingsPage({
     }
   };
 
-  const storeUrl = `${storeBaseUrl}/${store.slug}`;
+  const storeUrl = `${storeBaseUrl}/store/${store.slug}`;
 
   const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(`https://${storeUrl}`);
+    await navigator.clipboard.writeText(`${storeUrl}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -185,8 +185,8 @@ export default function SettingsPage({
               </Field>
               <Field label="WhatsApp Number" hint="Used to receive orders from customers.">
                 <input
-                  value={form.whatsappNumber}
-                  onChange={handleFieldChange("whatsappNumber")}
+                  value={form.whatsapp_number}
+                  onChange={handleFieldChange("whatsapp_number")}
                   className="input"
                 />
               </Field>
@@ -220,13 +220,6 @@ export default function SettingsPage({
                   type="email"
                   value={form.email}
                   onChange={handleFieldChange("email")}
-                  className="input"
-                />
-              </Field>
-              <Field label="Phone Number (Optional)">
-                <input
-                  value={form.phoneNumber}
-                  onChange={handleFieldChange("phoneNumber")}
                   className="input"
                 />
               </Field>
