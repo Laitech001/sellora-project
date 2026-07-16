@@ -245,7 +245,7 @@ export default function SettingsPage({
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field label="Store Email (Optional)" hint="Used for important notifications.">
+              <Field label="Store Email" hint="Used for important notifications.">
                 <input
                   type="email"
                   value={form.email}

@@ -21,7 +21,7 @@ type sidebarProps = {
     id: string;
     name: string;
     slug: string;
-    logo_url?: string;
+    logo_url: string | null;
   }
 }
 
@@ -31,7 +31,7 @@ export default function Sidebar({ store }: sidebarProps) {
   const slug = params.slug;
 
   const { logout, isLoading } = useLogout();
-  const [ logoPreview, setLogoPreview ] = useState(store.logo_url ?? "");
+  const [ logoPreview, setLogoPreview ] = useState(store.logo_url);
   type NavLink = {
     href: string,
     label: string,
