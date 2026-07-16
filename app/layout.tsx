@@ -33,6 +33,7 @@ export default function RootLayout({
         <Toaster
           theme="dark"
           richColors
+          expand
           position="top-center"
         />
       </body>

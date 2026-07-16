@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
 import {
   Store,
   Link2,
   Bell,
-  ShieldAlert,
   Upload,
   Copy,
   ExternalLink,
@@ -56,6 +57,8 @@ export default function SettingsPage({
   onLogoChange,
   onDeleteStore,
 }: SettingsPageProps) {
+  const router = useRouter();
+  
   const [form, setForm] = useState({
     name: store.name,
     whatsappNumber: store.whatsappNumber,
@@ -131,10 +134,25 @@ export default function SettingsPage({
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await onDeleteStore?.();
+      const res = await fetch(`/api/stores/${store.slug}/store`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        throw new Error(errorBody.error || "Failed to delete store");
+      }
+
+      toast.success("Store deleted successfully");
+      setShowDeleteModal(false);
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete store"
+      );
     } finally {
       setIsDeleting(false);
-      setShowDeleteModal(false);
     }
   };
 
@@ -179,7 +197,6 @@ export default function SettingsPage({
               <div className="flex items-center gap-4">
                 <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-border-soft bg-circle-background">
                   {logoPreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={logoPreview} alt="Store logo" className="h-full w-full object-cover" />
                   ) : (
                     <span className="text-lg font-semibold text-content">{getInitials(form.name)}</span>

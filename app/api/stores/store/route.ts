@@ -1,5 +1,5 @@
 // app/api/stores/route.ts
-import { createClient } from "@/lib/supabaseServer"
+import { createClient } from "@/lib/supabaseServer";
 import { NextRequest, NextResponse } from 'next/server';
 
 // Validation helpers

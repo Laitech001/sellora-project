@@ -1,6 +1,7 @@
 'use client';
 import ProductCard from "./ProductCard"
 import { addProductToCart } from "@/lib/cart"
+import { toast } from 'sonner';
 
 type ProductImage = {
   id: string;
@@ -32,12 +33,13 @@ export default function StoreClient({ products, slug }: ProductProps) {
 
     if (!product) {
       console.error('Product not found for cart:', productId);
+      toast.error('Product not found');
       return;
     }
 
     addProductToCart(product, slug);
 
-    alert('Product added to cart');
+    toast.success('Product added to cart');
   };
 
   return (

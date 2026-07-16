@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Modal, Button, Form, TextInput, TextArea, Label, Dropdown } from '@/ui'
+import { Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { BUSINESS_CATEGORY_OPTIONS } from '@/lib/constants/data';
 
@@ -10,18 +11,35 @@ interface Props {
   onClose: () => void;
 }
 
-export default function CreateStoreModal({ isOpen, onClose }: Props) {
-const router = useRouter();
-const [loading, setLoading] = useState(false);
-const [storeData, setStoreData] = useState({
+const INITIAL_STORE_DATA = {
   storeName: '',
   slug: '',
   whatsappNumber: '',
   businessCategory: '',
   address: ''
-});
+};
 
-  // handle store data for change
+export default function CreateStoreModal({ isOpen, onClose }: Props) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [storeData, setStoreData] = useState(INITIAL_STORE_DATA);
+
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be under 2MB");
+      return;
+    }
+
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -43,7 +61,6 @@ const [storeData, setStoreData] = useState({
     });
   };
 
-  // auto generate store slug
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
@@ -52,7 +69,13 @@ const [storeData, setStoreData] = useState({
       .replace(/[^\w-]+/g, '');
   };
 
-  // handle form submition
+  const resetForm = () => {
+    setStoreData(INITIAL_STORE_DATA);
+    setLogoFile(null);
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    setLogoPreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -68,27 +91,37 @@ const [storeData, setStoreData] = useState({
 
       if (!response.ok) {
         toast.error(result.error || 'Something went wrong while creating the store.');
-        console.log(result.error);
         return;
       }
 
+      const newSlug = result.store.slug;
+
+      if (logoFile) {
+        const logoForm = new FormData();
+        logoForm.append('logo', logoFile);
+
+        const logoRes = await fetch(`/api/stores/${newSlug}/storeLogo`, {
+          method: 'POST',
+          body: logoForm,
+        });
+
+        if (!logoRes.ok) {
+          const logoErr = await logoRes.json().catch(() => ({}));
+          toast.error(logoErr.error || 'Store created, but logo upload failed. You can add it later in Settings.');
+        }
+      }
+
       toast.success('Store created successfully!');
-      router.push(`/dashboard/${result.store.slug}`);
+      resetForm();
+      router.push(`/dashboard/${newSlug}`);
       router.refresh();
 
     } catch (err) {
       console.error(err);
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
-      setStoreData({
-        storeName: '',
-        slug: '',
-        whatsappNumber: '',
-        businessCategory: '',
-        address: ''
-      })
     }
-    
   }
 
   return (
@@ -172,6 +205,28 @@ const [storeData, setStoreData] = useState({
               </p>
             </div>
 
+            <div className="mb-4">
+              <Label htmlFor="logo">
+                Store Logo <span className="text-xs text-text-secondary font-normal">(optional)</span>
+              </Label>
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border-soft bg-circle-background">
+                  {logoPreview ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={logoPreview} alt="Store logo preview" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-xs text-text-secondary">No logo</span>
+                  )}
+                </div>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border-soft px-3 py-1.5 text-sm hover:bg-white/5">
+                  <Upload size={14} />
+                  {logoPreview ? "Change Logo" : "Upload Logo"}
+                  <input id="logo" type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
+                </label>
+              </div>
+              <p className="mt-1.5 text-xs text-text-secondary">PNG, JPG or WEBP (max 2MB)</p>
+            </div>
+
             <Button
               type='submit'
               disabled={loading}
@@ -184,8 +239,4 @@ const [storeData, setStoreData] = useState({
       )}
     </>
   )
-
-
 }
-
-
