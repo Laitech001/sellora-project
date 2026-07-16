@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from 'sonner';
 import { useRouter } from "next/navigation";
 import {
@@ -26,19 +26,8 @@ export type storeSettingDataProps = {
 type SettingsPageProps = {
   store: storeSettingDataProps;
   storeBaseUrl?: string; // e.g. "sellora.store"
-  onSave?: (data: Omit<storeSettingDataProps, "slug" | "logo_url">) => Promise<void> | void;
   onLogoChange?: (file: File) => Promise<void> | void;
-  onDeleteStore?: () => Promise<void> | void;
 };
-
-// type SectionId = "store-information" | "store-link" | "notifications" | "danger-zone";
-
-// const NAV_ITEMS: { id: SectionId; label: string; description: string; icon: typeof Store; danger?: boolean }[] = [
-//   { id: "store-information", label: "Store Information", description: "Update your store details", icon: Store },
-//   { id: "store-link", label: "Store Link", description: "Manage your store link", icon: Link2 },
-//   { id: "notifications", label: "Notifications", description: "Manage order notifications", icon: Bell },
-//   { id: "danger-zone", label: "Danger Zone", description: "Delete your store", icon: ShieldAlert, danger: true },
-// ];
 
 function getInitials(name: string) {
   return name
@@ -54,12 +43,10 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 export default function SettingsPage({
   store,
   storeBaseUrl = baseUrl,
-  onSave,
   onLogoChange,
-  onDeleteStore,
 }: SettingsPageProps) {
   const router = useRouter();
-  
+
   const [form, setForm] = useState({
     name: store.name,
     whatsapp_number: store.whatsapp_number,
@@ -71,32 +58,7 @@ export default function SettingsPage({
   const [copied, setCopied] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // const [activeSection, setActiveSection] = useState<SectionId>("store-information");
-
-  // const sectionRefs = useRef<Record<SectionId, HTMLDivElement | null>>({
-  //   "store-information": null,
-  //   "store-link": null,
-  //   notifications: null,
-  //   "danger-zone": null,
-  // });
-
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       const visible = entries.find((e) => e.isIntersecting);
-  //       if (visible) setActiveSection(visible.target.id as SectionId);
-  //     },
-  //     { rootMargin: "-15% 0px -70% 0px", threshold: 0 }
-  //   );
-
-  //   Object.values(sectionRefs.current).forEach((el) => el && observer.observe(el));
-  //   return () => observer.disconnect();
-  // }, []);
-
-  // const scrollToSection = (id: SectionId) => {
-  //   sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
-  // };
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   const handleFieldChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -107,17 +69,70 @@ export default function SettingsPage({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setLogoPreview(URL.createObjectURL(file));
-    await onLogoChange?.(file);
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo must be under 2MB");
+      return;
+    }
+
+    const previousPreview = logoPreview;
+    const objectUrl = URL.createObjectURL(file);
+    setLogoPreview(objectUrl); // optimistic preview while uploading
+
+    setIsUploadingLogo(true);
+    try {
+      const form = new FormData();
+      form.append("logo", file);
+
+      const res = await fetch(`/api/stores/${store.slug}/storeLogo`, {
+        method: "PATCH",
+        body: form,
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        throw new Error(errorBody.error || "Failed to upload logo");
+      }
+
+      const data = await res.json();
+      setLogoPreview(data.logoUrl);
+      toast.success("Logo updated");
+      await onLogoChange?.(file);
+      router.refresh(); // refresh the page to reflect the new logo
+    } catch (error) {
+      setLogoPreview(previousPreview); // roll back the optimistic preview
+      toast.error(error instanceof Error ? error.message : "Failed to upload logo");
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+      setIsUploadingLogo(false);
+    }
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     setSaved(false);
     try {
-      await onSave?.(form);
+      const res = await fetch(`/api/stores/${store.slug}/store`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        throw new Error(errorBody.error || "Failed to save changes");
+      }
+
+      toast.success("Store settings saved");
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save changes"
+      );
     } finally {
       setIsSaving(false);
     }
@@ -197,7 +212,12 @@ export default function SettingsPage({
               <div className="flex items-center gap-4">
                 <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-border-soft bg-circle-background">
                   {logoPreview ? (
-                    <img src={logoPreview} alt="Store logo" className="h-full w-full object-cover" />
+                    <img
+                      src={logoPreview}
+                      alt="Store logo"
+                      className="h-full w-full object-cover"
+                      onError={() => setLogoPreview("")}
+                    />
                   ) : (
                     <span className="text-lg font-semibold text-content">{getInitials(form.name)}</span>
                   )}
@@ -205,10 +225,20 @@ export default function SettingsPage({
                 <div>
                   <p className="text-xs text-text-secondary">Recommended size: 512x512px</p>
                   <p className="text-xs text-text-secondary">PNG, JPG or WEBP (max 2MB)</p>
-                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border-soft px-3 py-1.5 text-sm hover:bg-white/5">
-                    <Upload size={14} />
-                    Change Logo
-                    <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                  <label
+                    className={`mt-2 inline-flex items-center gap-2 rounded-lg border border-border-soft px-3 py-1.5 text-sm hover:bg-white/5 ${
+                      isUploadingLogo ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                    }`}
+                  >
+                    {isUploadingLogo ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                    {isUploadingLogo ? "Uploading..." : "Change Logo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      disabled={isUploadingLogo}
+                      className="hidden"
+                    />
                   </label>
                 </div>
               </div>
@@ -225,11 +255,11 @@ export default function SettingsPage({
               </Field>
             </div>
 
-            <div className="mt-6 w-full flex justify-end">
+            <div className="mt-6 w-full flex justify-start">
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="flex items-center gap-2 rounded-lg border border-border-soft px-4 py-2 text-sm font-medium text-white cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-60"
               >
                 {isSaving && <Loader2 size={14} className="animate-spin" />}
                 {saved && !isSaving && <Check size={14} />}
@@ -261,7 +291,7 @@ export default function SettingsPage({
                 </button>
               </div>
               <a
-                href={`https://${storeUrl}`}
+                href={`${storeUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 rounded-lg border border-border-soft px-4 py-2.5 text-sm font-medium hover:bg-white/5"
@@ -272,7 +302,7 @@ export default function SettingsPage({
           </section>
 
           {/* Notifications */}
-          <section
+          {/* <section
             className="rounded-xl border border-border-soft bg-card p-6"
           >
             <div className="mb-5 flex items-start gap-3">
@@ -287,7 +317,7 @@ export default function SettingsPage({
 
             <ToggleRow label="New order alerts" description="Get notified when a customer places an order." defaultChecked />
             <ToggleRow label="Low stock alerts" description="Get notified when a product is running low." defaultChecked />
-          </section>
+          </section> */}
 
           {/* Danger Zone */}
           <section

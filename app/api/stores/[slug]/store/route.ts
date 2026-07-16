@@ -8,6 +8,7 @@ type ParamsProps = {
   }>
 }
 
+// GET /api/stores/[slug]/store
 export async function GET(req: Request, context: ParamsProps) {
   const { slug } = await context.params;
   const supabase = await createClient();
@@ -66,6 +67,92 @@ export async function GET(req: Request, context: ParamsProps) {
   }
 }
 
+// PATCH /api/stores/[slug]/store
+const NAME_MAX_LENGTH = 100;
+const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export async function PATCH(request: Request, context: ParamsProps) {
+  const { slug } = await context.params;
+  const supabase = await createClient();
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!slug) {
+    return NextResponse.json({ error: "Missing store slug" }, { status: 400 });
+  }
+
+  let body: { name?: unknown; whatsapp_number?: unknown; email?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const { name, whatsapp_number, email } = body;
+
+  if (typeof name !== "string" || name.trim().length < 2 || name.trim().length > NAME_MAX_LENGTH) {
+    return NextResponse.json({ error: "Invalid store name" }, { status: 400 });
+  }
+
+  if (typeof whatsapp_number !== "string" || !PHONE_REGEX.test(whatsapp_number.trim())) {
+    return NextResponse.json({ error: "Invalid WhatsApp number" }, { status: 400 });
+  }
+
+  const trimmedEmail = typeof email === "string" ? email.trim() : "";
+  if (trimmedEmail && !EMAIL_REGEX.test(trimmedEmail)) {
+    return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+  }
+
+  try {
+    const { data: storeData, error: storeError } = await supabase
+      .from("stores")
+      .select("id, user_id")
+      .eq("slug", slug)
+      .single();
+
+    if (storeError) {
+      if (storeError.code === "PGRST116") {
+        return NextResponse.json({ error: "Store not found" }, { status: 404 });
+      }
+      console.error("Store fetch error:", storeError);
+      return NextResponse.json({ error: "Failed to fetch store data" }, { status: 500 });
+    }
+
+    if (storeData.user_id !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const { data: updatedStore, error: updateError } = await supabase
+      .from("stores")
+      .update({
+        name: name.trim(),
+        whatsapp_number: whatsapp_number.trim(),
+        email: trimmedEmail || null,
+      })
+      .eq("id", storeData.id)
+      .select("id, name, slug, whatsapp_number, email, logo_url, updated_at")
+      .single();
+
+    if (updateError) {
+      console.error("Store update error:", updateError);
+      return NextResponse.json({ error: "Failed to update store" }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      { message: "Store updated successfully", store: updatedStore },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Unexpected error updating store:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+// delete store and all related data (products, images, orders, etc.)
 export async function DELETE(request: Request, context: ParamsProps) {
   const { slug } = await context.params;
   const supabase = await createClient();

@@ -17,9 +17,6 @@ export default async function SettingsRoute({ params }: { params: Promise<{ slug
         logo_url: store.logo_url || '',
         slug: store.slug,
       }}
-      onSave={async (data) => {
-        "use server"; // or wire to a client-side fetch to your PATCH route
-      }}
     />
   );
 }
