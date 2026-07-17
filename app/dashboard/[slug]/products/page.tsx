@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import EmptyState from '../../../../components/shared/EmptyState'
+import EmptyState from '@/components/shared/EmptyState'
 import { ProductTable, ProductCardList } from '@/components/dashboard/product';
 import { getProductsBySlug } from '@/lib/data/Products';
 import { Card, LoadingLink } from '@/ui';
+import { PackageOpen } from 'lucide-react';
 
 type ParamsPprops = {
   params: Promise<{
@@ -43,12 +43,13 @@ export default async function Products( {params}: ParamsPprops ) {
             
           </>
         ) : (
-          <section className='flex flex-col justify-center items-center h-[calc(100vh-100px)]'>
-            <EmptyState 
-              title= 'No Product Added'
-              description='Click on Add Product to add your first Product'
-              actionText='Add Product'
-              actionLink='/dashboard/products/new'
+          <section className="flex flex-col justify-center items-center h-[calc(100vh-100px)]">
+            <EmptyState
+              icon={<PackageOpen size={50} className="text-primary-500" />}
+              title="No Product Added"
+              description="Click on Add Product to add your first Product"
+              actionText="Add Product"
+              actionLink={`/dashboard/${slug}/products/new`}
             />
           </section>
         )}

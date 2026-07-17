@@ -1,6 +1,8 @@
-import { OrderCardList, OrderTable } from '@/components/dashboard/order'
-import { getOrdersBySlug } from '@/lib/data/Orders'
-import { Card } from '@/ui'
+import EmptyState from '@/components/shared/EmptyState';
+import { OrderCardList, OrderTable } from '@/components/dashboard/order';
+import { getOrdersBySlug } from '@/lib/data/Orders';
+import { Card } from '@/ui';
+import { ShoppingCart } from 'lucide-react';
 
 type ParamsProps = {
   params: Promise<{
@@ -24,14 +26,27 @@ export default async function OrderPage({ params }: ParamsProps) {
         </p>
       </Card>
 
-      <section>
-        <OrderCardList orders={orders} slug={slug}/>
-      </section>
+      {
+        orders && orders.length > 0 ? (
+          <>
+            <div>
+            <OrderCardList orders={orders} slug={slug}/>
+            </div>
 
-      <section className='hidden lg:block'>
-        <OrderTable orders={orders} slug={slug} />
-      </section>
-      
+            <div className='hidden lg:block'>
+              <OrderTable orders={orders} slug={slug} />
+            </div>
+          </>      
+        ) : (
+          <section className="flex flex-col justify-center items-center h-[calc(100vh-100px)]">
+            <EmptyState
+              icon={<ShoppingCart size={50} className="text-primary-500" />}
+              title="No Orders Yet"
+              description="Orders from your customers will appear here."
+            />
+          </section>
+        )
+      }      
     </div>
   )
 }
