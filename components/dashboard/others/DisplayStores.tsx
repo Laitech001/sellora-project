@@ -1,7 +1,11 @@
 'use client'
-import { Store, Building2, MapPin, Phone, ArrowRight, ChevronRight, } from 'lucide-react'
-import Link from 'next/link'
+
+import { 
+  Store, Building2, MapPin, Phone, ArrowRight, ChevronRight 
+} from 'lucide-react';
+import Link from 'next/link';
 import { Store as StoreType } from '@/types'
+import { LoadingLink } from '@/ui';
 
 type Props = {
   stores: StoreType[] | null
@@ -47,23 +51,23 @@ export default function DisplayStores({stores}: Props) {
                 <span>Whatsapp Number: {store.whatsapp_number}</span>
               </p>
               
-              <Link 
+              <LoadingLink
                 href={`/dashboard/${store.slug}`}
-                className='text-primary-500 hover:underline flex items-center gap-1'
+                className="inline-flex items-center gap-1.5 text-primary-500 hover:underline"
+                loadingText="Going to dashboard..."
               >
                 <span>Go to Store Dashboard</span>
                 <ArrowRight size={16} />
-              </Link>
+              </LoadingLink>
               </section> 
             </div>
 
             <div className='hidden md:flex'>
-              <Link
+              <LoadingLink
                 href={`/dashboard/${store.slug}`}
               >
                 <ChevronRight size={20} className="text-white cursor-pointer" />
-              </Link>
-              
+              </LoadingLink>           
             </div>
           </div>  
         ))

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import EmptyState from '../../../../components/shared/EmptyState'
 import { ProductTable, ProductCardList } from '@/components/dashboard/product';
 import { getProductsBySlug } from '@/lib/data/Products';
-import { Card } from '@/ui';
+import { Card, LoadingLink } from '@/ui';
 
 type ParamsPprops = {
   params: Promise<{
@@ -22,12 +22,13 @@ export default async function Products( {params}: ParamsPprops ) {
 
           <h1 className="text-2xl font-bold text-gray-200">Products</h1>
 
-          <Link
+          <LoadingLink
             href={`/dashboard/${slug}/products/new`}
             className='py-2 px-3 bg-linear-to-r from-primary-500 to-accent-500 text-white rounded-lg text-md transition'
+            loadingText='Navigating...'
           >
             + Add Product
-          </Link>
+          </LoadingLink>
         </Card>
         
         {products && products.length > 0 ? (

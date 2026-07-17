@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation'
-import { Mail, Eye, EyeOff, ShieldCheck, Sparkles } from "lucide-react";
+import { Mail, Eye, EyeOff, ShieldCheck, Sparkles, Loader2 } from "lucide-react";
 import { Form, TextInput, Label, Button, GoogleIcon} from '@/ui';
 import { supabase } from "@/lib/supabase";
+import { toast } from 'sonner';
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Authform() {
+
   const router = useRouter();
+
   const [signupError, setSignupError] = useState<string | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [loading, setLoading] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState<"signup" | "login">("signup");
@@ -146,12 +150,22 @@ export default function Authform() {
 
   // handle login with google
   const handleGoogleSignin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    setIsGoogleLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to sign in with Google");
+      setIsGoogleLoading(false);
+    }
+    
   };
 
   // clear error when user switch between tabs
@@ -222,16 +236,25 @@ export default function Authform() {
               <div>
                 <Button
                   onClick={handleGoogleSignin}
+                  disabled={isGoogleLoading}
                   variant="secondary"
                   className="w-full rounded-full flex justify-center items-center"
                 >
-                  <div className="flex items-center gap-2">
-                    <GoogleIcon />
-                    <span>
-                      continue with Google
-                    </span>
-                  </div>
-                  
+                  {isGoogleLoading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>
+                        Redirecting...
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <GoogleIcon />
+                      <span>
+                        continue with Google
+                      </span>
+                    </div>
+                  )}                  
                 </Button>
               </div>
 
@@ -330,16 +353,25 @@ export default function Authform() {
               <div>
                 <Button
                   onClick={handleGoogleSignin}
+                  disabled={isGoogleLoading}
                   variant="secondary"
                   className="w-full rounded-full flex justify-center items-center"
                 >
-                  <div className="flex items-center gap-2">
-                    <GoogleIcon />
-                    <span>
-                      continue with Google
-                    </span>
-                  </div>
-                  
+                  {isGoogleLoading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>
+                        Redirecting...
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <GoogleIcon />
+                      <span>
+                        continue with Google
+                      </span>
+                    </div>
+                  )}                  
                 </Button>
               </div>
 
