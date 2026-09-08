@@ -98,17 +98,10 @@ export async function PATCH(request: Request, context: ParamsProps) {
     const description = formData.get('description') as string | null;
     const stock = formData.get('stock') as string | null;
 
-    // Frontend sends image ids to remove as repeated form fields:
-    // form.append('removeImageIds', id) once per id to remove.
     const removeImageIds = formData.getAll('removeImageIds') as string[];
 
-    // New files to add, same pattern as POST.
     const newImageFiles = formData.getAll('images') as File[];
 
-    // ── Step 1: Update text fields ──
-    // Build the update object dynamically so we only touch fields
-    // that were actually sent — this lets the frontend send just
-    // "price" alone without needing to resend name/description/stock.
     const fieldsToUpdate: Record<string, string | number> = {};
     if (name !== null) fieldsToUpdate.name = name;
     if (price !== null) fieldsToUpdate.price = Number(price);

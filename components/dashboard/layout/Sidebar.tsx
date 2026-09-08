@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useLogout } from '@/hooks/useLogout';
 import { useState } from 'react';
-import Image from 'next/image';
 
 type sidebarProps = {
   store: {

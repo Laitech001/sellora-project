@@ -127,8 +127,8 @@ export default function CartClient({ slug }: CartClientProps) {
   //handle submit order form
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
+
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
@@ -144,6 +144,8 @@ export default function CartClient({ slug }: CartClientProps) {
           })),
         }),
       });
+
+      console.log("Order response status:", res.status);
 
       const data = await res.json();
 
