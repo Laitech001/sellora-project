@@ -145,8 +145,6 @@ export default function CartClient({ slug }: CartClientProps) {
         }),
       });
 
-      console.log("Order response status:", res.status);
-
       const data = await res.json();
 
       if (!res.ok) {
