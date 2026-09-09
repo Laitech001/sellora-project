@@ -1,4 +1,5 @@
 import { ViewDetailsButton } from '../../actions';
+import { formatDate } from '@/utils';
 
 type orderProps = {
   order: {
@@ -23,40 +24,6 @@ export default function OrderRow({ order, onClick }: orderProps) {
     cancelled: "bg-zinc-500/10 text-zinc-400 border border-zinc-500/20",
   };
 
-  const getOrdinal = (day: any) => {
-    if (day > 3 && day < 21) return "th";
-    switch (day % 10) {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
-    }
-  };
-
-  const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
-
-    const day = date.toLocaleString("en-NG", {
-      timeZone: "Africa/Lagos",
-      day: "numeric",
-    });
-
-    const monthYear = date.toLocaleString("en-NG", {
-      timeZone: "Africa/Lagos",
-      month: "long",
-      year: "numeric",
-    });
-
-    const time = date.toLocaleString("en-NG", {
-      timeZone: "Africa/Lagos",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    return `${day}${getOrdinal(Number(day))} ${monthYear}, ${time}`;
-  };
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -69,7 +36,7 @@ export default function OrderRow({ order, onClick }: orderProps) {
       key={order.id} 
       className="align-middle text-left border-b border-slate-500 p-2 hover:bg-slate-800/30 transition-all duration-500"
     >
-      <td className="py-3 font-semibold">#ORD-{order.id.toString().padStart(4, '0')}</td>
+      <td className="py-4 font-semibold">#ORD-{order.id.toString().padStart(4, '0')}</td>
 
       <td className='flex flex-col gap-1'>
         <p className='text-base text-content'>{order.customer_name}</p>
